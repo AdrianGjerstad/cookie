@@ -14,18 +14,20 @@ import { tocHighlight } from '/home/adrian/projects/cookie/.codedoc/node_modules
 import { postNavSearch } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/search/post-nav/index.js';postNavSearch();
 import { copyLineLinks } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/code/line-links/copy-line-link.js';copyLineLinks();
 import { gatherFootnotes } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/footnote/gather-footnotes.js';gatherFootnotes();
-import { ToCPrevNext } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/prevnext/index.js';
+import { CollapseControl } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/collapse/collapse-control.js';
 import { GithubSearch } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/misc/github/search.js';
 import { ToCToggle } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/toggle/index.js';
 import { DarkModeSwitch } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/darkmode/index.js';
 import { ConfigTransport } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/transport/config.js';
+import { ToCPrevNext } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/prevnext/index.js';
 
 const components = {
-  'SJkXXcYknjUi/BvGch/nXw==': ToCPrevNext,
+  'VkbpH68dhCpFK186U86ZNw==': CollapseControl,
   'lb4aRyQLS2n6PHUvpkcfQg==': GithubSearch,
   'gL4Ij0RUGIJZpqxZ7x7Sfg==': ToCToggle,
   'A8LvhXJLRqTDd9eNoQ4xDw==': DarkModeSwitch,
-  'sVcM6x0RSvgPSTgVRoc+JQ==': ConfigTransport
+  'sVcM6x0RSvgPSTgVRoc+JQ==': ConfigTransport,
+  'SJkXXcYknjUi/BvGch/nXw==': ToCPrevNext
 };
 
 const renderer = getRenderer();

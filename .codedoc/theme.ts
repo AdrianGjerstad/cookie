@@ -1,11 +1,18 @@
-import { createTheme } from '@codedoc/core/transport';
+import {
+  createTheme,
+  DefaultCodeThemeLight
+} from '@codedoc/core/transport';
 
 
 export const theme = /*#__PURE__*/createTheme({
   light: {
-    primary: '#1eb2a6'
+    primary: '#000000'
   },
   dark: {
-    primary: '#1eb2a6'
+    primary: '#ffffff'
+  },
+  code: {
+    wmbar: false,
+    light: DefaultCodeThemeLight
   }
 });

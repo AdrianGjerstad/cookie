@@ -1,4 +1,10 @@
 [Home](/)
+[Introduction](/docs/introduction)
+
+> :Collapse label='Using the Compiler'
+> 
+> [Overview](/docs/compiler/overview)
+> [Command Line Options](/docs/compiler/options)
 
 <br><br>
 
