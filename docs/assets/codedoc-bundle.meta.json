@@ -1,0 +1,116 @@
+{
+  "init": [
+    {
+      "name": "initJssCs",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/transport/setup-jss.js",
+      "hash": "OxoHrHyEqUza5btHQkuwZw=="
+    },
+    {
+      "name": "installTheme",
+      "filename": "/home/adrian/projects/cookie/.codedoc/content/theme.ts",
+      "hash": "3Olraq3KYII7Q+0jPznBTw=="
+    },
+    {
+      "name": "codeSelection",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/code/selection.js",
+      "hash": "qteI/5NXZiL0PEC3VDS9ww=="
+    },
+    {
+      "name": "sameLineLengthInCodes",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/code/same-line-length.js",
+      "hash": "YJAqrIjnDaTLbk15Sa61CQ=="
+    },
+    {
+      "name": "initHintBox",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/code/line-hint/index.js",
+      "hash": "YHobDPYLEU5raX8LCVi4Og=="
+    },
+    {
+      "name": "initCodeLineRef",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/code/line-ref/index.js",
+      "hash": "f2bqd1ONw9SWYGZmsZSvwQ=="
+    },
+    {
+      "name": "initSmartCopy",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/code/smart-copy.js",
+      "hash": "AFPcC8LEJMePMVNPWjDDKA=="
+    },
+    {
+      "name": "copyHeadings",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/heading/copy-headings.js",
+      "hash": "Mo+VtHvHIQEiVCMEIC7+/w=="
+    },
+    {
+      "name": "contentNavHighlight",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/contentnav/highlight.js",
+      "hash": "rARIbbf2aEF3GSUgO38aiw=="
+    },
+    {
+      "name": "loadDeferredIFrames",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/transport/deferred-iframe.js",
+      "hash": "WZ6vA0VeSGFVVdFYHbuTjA=="
+    },
+    {
+      "name": "smoothLoading",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/transport/smooth-loading.js",
+      "hash": "eDvPvI6hWHEHe+Z41cRWaw=="
+    },
+    {
+      "name": "tocHighlight",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/toc-highlight.js",
+      "hash": "PTKLCaQI2ZLGZW5vargJxQ=="
+    },
+    {
+      "name": "postNavSearch",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/search/post-nav/index.js",
+      "hash": "YT5FyrMsN/G6+9NEGiVKDQ=="
+    },
+    {
+      "name": "copyLineLinks",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/code/line-links/copy-line-link.js",
+      "hash": "XZb1kbSsw1G1u/NOni13RA=="
+    },
+    {
+      "name": "gatherFootnotes",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/footnote/gather-footnotes.js",
+      "hash": "5Ohc7ouL1ySbxthU3TD9yg=="
+    },
+    {
+      "name": "reloadOnChange",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/serve/reload.js",
+      "hash": "dVwa+6ijYeXJ4XIfq+yRcA=="
+    }
+  ],
+  "components": [
+    {
+      "name": "ToCPrevNext",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/prevnext/index.js",
+      "hash": "SJkXXcYknjUi/BvGch/nXw=="
+    },
+    {
+      "name": "GithubSearch",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/misc/github/search.js",
+      "hash": "lb4aRyQLS2n6PHUvpkcfQg=="
+    },
+    {
+      "name": "ToCToggle",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/toggle/index.js",
+      "hash": "gL4Ij0RUGIJZpqxZ7x7Sfg=="
+    },
+    {
+      "name": "DarkModeSwitch",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/darkmode/index.js",
+      "hash": "A8LvhXJLRqTDd9eNoQ4xDw=="
+    },
+    {
+      "name": "ConfigTransport",
+      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/transport/config.js",
+      "hash": "sVcM6x0RSvgPSTgVRoc+JQ=="
+    }
+  ],
+  "renderer": {
+    "name": "getRenderer",
+    "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/transport/renderer.js",
+    "hash": "U4dQUv+qWVxTDiGq9U7Rhg=="
+  }
+}
