@@ -74,11 +74,6 @@
       "name": "gatherFootnotes",
       "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/footnote/gather-footnotes.js",
       "hash": "5Ohc7ouL1ySbxthU3TD9yg=="
-    },
-    {
-      "name": "reloadOnChange",
-      "filename": "/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/serve/reload.js",
-      "hash": "dVwa+6ijYeXJ4XIfq+yRcA=="
     }
   ],
   "components": [

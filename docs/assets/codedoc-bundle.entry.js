@@ -14,7 +14,6 @@ import { tocHighlight } from '/home/adrian/projects/cookie/.codedoc/node_modules
 import { postNavSearch } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/search/post-nav/index.js';postNavSearch();
 import { copyLineLinks } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/code/line-links/copy-line-link.js';copyLineLinks();
 import { gatherFootnotes } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/footnote/gather-footnotes.js';gatherFootnotes();
-import { reloadOnChange } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/serve/reload.js';reloadOnChange();
 import { ToCPrevNext } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/prevnext/index.js';
 import { GithubSearch } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/misc/github/search.js';
 import { ToCToggle } from '/home/adrian/projects/cookie/.codedoc/node_modules/@codedoc/core/dist/es6/components/page/toc/toggle/index.js';
