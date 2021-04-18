@@ -95,8 +95,8 @@ compiler to strip all debug symbols out).
     (; Lots and lots of super-optimized memory management code ;))
   (func $.free (export ".free") (type 2) (param i32)
     (; More memory management code written by hand ;))
-  (func $F4mainPSA (export "F4mainPSA") (type 1) (param $argv i32) (result i32)
-    i32.const 42))
+/*!*/  (func $F4mainPSA (export "F4mainPSA") (type 1) (param $argv i32) (result i32)
+/*!*/    i32.const 42))
 ```
 
 Of course optimizing the output to the maximum could see that this program never
