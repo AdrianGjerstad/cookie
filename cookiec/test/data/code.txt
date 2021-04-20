@@ -1,0 +1,2 @@
+This is some code that definitely works and is not just here as a placeholder
+for a test suite!

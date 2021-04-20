@@ -16,16 +16,20 @@ Describe(source_code_pool) {
   It(reads_files_correctly) {
     cookie::SourceCodePool pool;
     
-    const std::string content = "Hello, world!\nHello, world!\n";
-    const std::string filename = "/tmp/cookiec--source-code-pool.txt";
-    std::ofstream f(filename);
-    
-    f.write(content.c_str(), content.size());
+    const std::string filename = "cookiec/test/data/code.txt";
+    std::ifstream f(filename);
+    f.seekg(0, f.end);
+    unsigned int size = f.tellg();
+    char c[size+1];
+    f.seekg(0, f.beg);
+    f.read(c, size);
     f.close();
+    c[size] = '\x00';  // Stupid c-style strings
+    const std::string content = c;
 
     pool.add(filename);
-    const std::string* source = pool.get(filename);
     
+    const std::string* source = pool.get(filename);
     // DO NOT DEREFERENCE THE STRING IN REAL CODE WITH UNKNOWN SIZES OF DATA!!!!
     Assert::That(*source, Equals(content));
   }
