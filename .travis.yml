@@ -15,4 +15,4 @@ before_install:
   - sudo dpkg -i bazel_3.1.0-linux-x86_64.deb
 
 script:
-  - bazel test //cookiec/test:* -I .
+  - bazel test //cookiec/test:* --cxxopt "-I ./igloo"
