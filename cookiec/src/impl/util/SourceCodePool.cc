@@ -18,6 +18,7 @@
 #include <unordered_map>
 #include <fstream>
 #include <iterator>
+#include <iostream>
 
 #include "../../include/util/Filesystem.h"
 
@@ -52,7 +53,24 @@ void SourceCodePool::add(std::string filename) {
   f.close();
 }
 
+void SourceCodePool::add_cin(std::string filename) {
+  std::string* source = new std::string();
+
+  char c;
+  while (std::cin.get(c)) {
+    source->push_back(c);
+  }
+
+  pool_[filename] = source;
+}
+
 const std::string* SourceCodePool::get(std::string filename) const {
+  if (filename == "-") {
+    auto it = pool_.find(filename);
+    if (it == pool_.end()) return nullptr;
+    return (*it).second;
+  }
+
   auto it = pool_.find(cookie::fs::absolute_path(filename));
   if (it == pool_.end()) return nullptr;
   return (*it).second;

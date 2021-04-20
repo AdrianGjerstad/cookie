@@ -38,8 +38,8 @@ int main(int argc, char** argv) {
   cookie::SourceCodePool code_pool;
 
   if (args.terminal_input) {
-    code_pool.add("/dev/stdin");
-    std::cout << *(code_pool.get("/dev/stdin")) << std::endl;
+    code_pool.add_cin("-");
+    std::cout << *(code_pool.get("-")) << std::endl;
   } else {
     code_pool.add(args.input);
     std::cout << *(code_pool.get(args.input)) << std::endl;
