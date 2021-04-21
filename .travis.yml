@@ -18,4 +18,4 @@ env:
   - BAZEL_CXXOPTS="-std=c++17"
 
 script:
-  - bazel test //cookiec/test:*
+  - bazel test //cookiec/test:* --sandbox_debug
