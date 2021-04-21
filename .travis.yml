@@ -1,5 +1,8 @@
 language: cpp
 
+compiler: g++
+
+os: linux
 dist: trusty
 
 addons:
