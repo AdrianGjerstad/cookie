@@ -22,5 +22,4 @@ env:
   - BAZEL_CXXOPTS="-std=c++17"
 
 script:
-  - export CC="g++-8"
-  - bazel test //cookiec/test:* --sandbox_debug
+  - ./cookiec/run.sh tests
