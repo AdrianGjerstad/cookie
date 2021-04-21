@@ -28,17 +28,17 @@ const lest::test specification[] = {
 
     const std::string filename = "cookiec/test/data/code.txt";
     std::ifstream f(filename);
-    
+
     f.seekg(0, f.end);
     unsigned int size = f.tellg();
     char c[size + 1];
     f.seekg(0, f.beg);
-    
+
     f.read(c, size);
     f.close();
-    
+
     c[size] = '\x00';  // Stupid c-style strings
-    
+
     const std::string content = c;
 
     pool.add(filename);
