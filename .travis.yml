@@ -12,6 +12,7 @@ addons:
     packages:
       - wget
       - pkg-config
+      - g++-8
 
 before_install:
   - wget https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel_3.1.0-linux-x86_64.deb
@@ -21,5 +22,5 @@ env:
   - BAZEL_CXXOPTS="-std=c++17"
 
 script:
-  - export CC="g++"
+  - export CC="g++-8"
   - bazel test //cookiec/test:* --sandbox_debug
