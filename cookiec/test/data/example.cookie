@@ -1,0 +1,4 @@
+export i32 main(str[] args) {
+  return 0;
+}
+

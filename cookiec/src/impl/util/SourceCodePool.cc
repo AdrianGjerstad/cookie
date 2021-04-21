@@ -64,6 +64,10 @@ void SourceCodePool::add_cin(std::string filename) {
   pool_[filename] = source;
 }
 
+void SourceCodePool::add_hardcode(std::string filename, std::string* code) {
+  pool_[cookie::fs::absolute_path(filename)] = code;
+}
+
 const std::string* SourceCodePool::get(std::string filename) const {
   if (filename == "-") {
     auto it = pool_.find(filename);

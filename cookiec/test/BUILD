@@ -25,3 +25,19 @@ cc_test(
   timeout = "short"
 )
 
+cc_test(
+  name = "Token",
+  srcs = [ "token.cc" ],
+  deps = [
+    "//test:TestFramework",
+    "//cookiec:Token",
+    "//cookiec:TokenType",
+    "//cookiec:Position",
+    "//cookiec:SourceCodePool"
+  ],
+  data = [
+    "data/example.cookie"
+  ],
+  timeout = "short"
+)
+
