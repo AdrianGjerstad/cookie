@@ -20,51 +20,47 @@
 #include <deque>
 
 #include "../src/include/util/Filesystem.h"
-#include <igloo/igloo_alt.h>
 
-Describe(filesystem) {
-  Describe(paths) {
-    It(normalizes_paths) {
-      igloo::Assert::That(
-          cookie::fs::normalize_path("/foo/bar", "../baz"),
-          igloo::Equals("/foo/baz"));
-    }
+// Lest Test Framework
+#include "../../test/lest.hpp"
 
-    It(forces_absolute_paths) {
-      igloo::Assert::That(
-          cookie::fs::absolute_path("foo"),
-          igloo::Equals("/home/foo"));
-    }
+const lest::test specification[] = {
+  CASE( "fs normalizes paths" ) {
+    EXPECT(
+        cookie::fs::normalize_path("/foo/bar", "../baz") == "/foo/baz");
+  },
 
-    It(forces_relative_paths) {
-      igloo::Assert::That(
-          cookie::fs::relative_path("/hello"),
-          igloo::Equals("../hello"));
-    }
+  CASE( "fs finds absolute paths" ) {
+    EXPECT(
+        cookie::fs::absolute_path("foo") == "/home/foo");
+  },
 
-    It(produces_path_segments) {
-      igloo::Assert::That(
-          cookie::fs::path_segments("/foo/bar/baz"),
-          igloo::Equals<std::deque<std::string>>({"foo", "bar", "baz"}));
-    }
+  CASE( "fs finds relative paths" ) {
+    EXPECT(
+        cookie::fs::relative_path("/hello") == "../hello");
+  },
 
-    It(produces_pwd) {
-      igloo::Assert::That(
-          cookie::fs::pwd(),
-          igloo::Equals("/home"));
-    }
+  CASE( "fs can split paths up into segments" ) {
+    std::deque<std::string> expected = {"foo", "bar", "baz"};
+    EXPECT(
+        cookie::fs::path_segments("/foo/bar/baz") == expected);
+  },
 
-    It(purges_double_slashes) {
-      igloo::Assert::That(
-          cookie::fs::remove_doubleslash("/foo//bar//baz/ham"),
-          igloo::Equals("/foo/bar/baz/ham"));
-    }
-  };
+  CASE( "fs gets the proper cwd (current working directory)" ) {
+    EXPECT(
+        cookie::fs::pwd() == "/home");
+  },
+
+  CASE( "fs purges double slashes from file paths" ) {
+    EXPECT(
+        cookie::fs::remove_doubleslash("/foo//bar//baz/ham") ==
+        "/foo/bar/baz/ham");
+  }
 };
 
 int main(int argc, char** argv) {
   chdir("/home");
 
-  return igloo::TestRunner::RunAllTests(argc, argv);
+  return lest::run(specification, argc, argv);
 }
 

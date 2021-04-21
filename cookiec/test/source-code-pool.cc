@@ -18,12 +18,12 @@
 #include <fstream>
 
 #include "../src/include/util/SourceCodePool.h"
-#include <igloo/igloo_alt.h>
 
-Describe(source_code_pool) {
-  void SetUp() {}
+// Lest Test Framework
+#include "../../test/lest.hpp"
 
-  It(reads_files_correctly) {
+const lest::test specification[] = {
+  CASE( "SourceCodePool reads files into memory properly" ) {
     cookie::SourceCodePool pool;
 
     const std::string filename = "cookiec/test/data/code.txt";
@@ -45,20 +45,20 @@ Describe(source_code_pool) {
 
     const std::string* source = pool.get(filename);
     // DO NOT DEREFERENCE THE STRING IN REAL CODE WITH UNKNOWN SIZES OF DATA!!!!
-    igloo::Assert::That(*source, igloo::Equals(content));
-  }
+    EXPECT((*source) == content);
+  },
 
-  It(deletes_files_correctly) {
+  CASE( "SourceCodePool properly removes files from the pool" ) {
     cookie::SourceCodePool pool;
 
     // Just an example file that is guaranteed to exist.
     pool.add("/etc/passwd");
     pool.remove("/etc/passwd");
 
-    igloo::Assert::That(pool.get("/etc/passwd"), igloo::Equals(nullptr));
-  }
+    EXPECT(pool.get("/etc/passwd") == nullptr);
+  },
 
-  It(disposes_files_correctly) {
+  CASE( "SourceCodePool properly disposes of contents on destruction" ) {
     cookie::SourceCodePool pool;
 
     pool.add("/etc/passwd");
@@ -67,19 +67,19 @@ Describe(source_code_pool) {
     // Emulate destruction of the pool. Destroy/free all source code resources.
     pool.dispose();
 
-    igloo::Assert::That(pool.size(), igloo::Equals(0));
-  }
+    EXPECT(pool.size() == 0u);
+  },
 
-  It(handles_missing_files_correctly) {
+  CASE( "SourceCodePool handles missing files correctly" ) {
     cookie::SourceCodePool pool;
 
     pool.add("/nonexistent");
 
-    igloo::Assert::That(pool.get("/nonexistent"), igloo::Equals(nullptr));
+    EXPECT(pool.get("/nonexistent") == nullptr);
   }
 };
 
 int main(int argc, char** argv) {
-  return igloo::TestRunner::RunAllTests(argc, argv);
+  return lest::run(specification, argc, argv);
 }
 
