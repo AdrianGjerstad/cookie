@@ -27,6 +27,7 @@ class SourceCodePool {
 
   void add(std::string);
   void add_cin(std::string);
+  void add_hardcode(std::string, std::string*);
   const std::string* get(std::string) const;
   void remove(std::string);
 

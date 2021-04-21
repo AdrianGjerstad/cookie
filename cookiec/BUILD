@@ -91,3 +91,28 @@ cc_library(
   ]
 )
 
+################################################################################
+################################### LEXER ######################################
+################################################################################
+
+# Tokens are an essential part of the compiler, because they are the building
+# blocks of what is to come. They are the output type of the Lexer, and so they
+# are defined here.
+cc_library(
+  name = "Token",
+  srcs = [ "src/impl/lexer/Token.cc" ],
+  hdrs = [ "src/include/lexer/Token.h" ],
+  deps = [
+    ":TokenType",
+    ":Position"
+  ]
+)
+
+# Continuation of Token: Token types are what differentiate a number from a
+# keyword, and, as you may imagine, are very important.
+cc_library(
+  name = "TokenType",
+  srcs = [ "src/impl/lexer/TokenType.cc" ],
+  hdrs = [ "src/include/lexer/TokenType.h" ]
+)
+
