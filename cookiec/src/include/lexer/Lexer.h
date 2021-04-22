@@ -12,43 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef COOKIEC_SRC_INCLUDE_LEXER_TOKEN_H_
-#define COOKIEC_SRC_INCLUDE_LEXER_TOKEN_H_
+#ifndef COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
+#define COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
 
 #include <string>
 
+#include "Token.h"
 #include "TokenType.h"
 #include "../util/Position.h"
+#include "../util/SourceCodePool.h"
+#include "../structs/LexerResult.h"
 
 namespace cookie {
 
-class Token {
+class Lexer {
  public:
-  Token(Position, Position, TokenType);
+  explicit Lexer(const SourceCodePool*);
 
-  const std::string to_string() const;
-  const TokenType type() const;
-  const std::string get_value() const;
-
-  // const std::string as_str() const;
-  const int32_t as_i32() const;
-  const uint32_t as_u32() const;
-  const int64_t as_i64() const;
-  const uint64_t as_u64() const;
-  const float as_f32() const;
-  const double as_f64() const;
+  LexerResult lex(const std::string&) const;
 
  private:
-  // The value for the token may be extracted via the source data of these
-  // Position fields.
-  Position pstart_;
-  Position pend_;
-  TokenType type_;
-};
+  const SourceCodePool* pool_;
 
-bool operator ==(const Token&, const Token&);
+  Token make_number_(Position*) const;
+};
 
 }  // namespace cookie
 
-#endif  // COOKIEC_SRC_INCLUDE_LEXER_TOKEN_H_
+#endif  // COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
 

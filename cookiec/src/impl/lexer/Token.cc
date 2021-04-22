@@ -73,5 +73,9 @@ const double Token::as_f64() const {
   return std::stod(get_value());
 }
 
+bool operator ==(const Token& a, const Token& b) {
+  return a.type() == b.type() && a.get_value() == b.get_value();
+}
+
 }  // namespace cookie
 
