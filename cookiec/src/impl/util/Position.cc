@@ -15,7 +15,7 @@
 #include "../../include/util/Position.h"
 
 #include "../../include/util/SourceCodePool.h"
-#include <iostream>
+
 namespace cookie {
 
 Position::Position(

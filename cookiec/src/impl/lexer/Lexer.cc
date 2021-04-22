@@ -1,3 +1,17 @@
+// Copyright 2021 Adrian Gjerstad
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #include "../../include/lexer/Lexer.h"
 
 #include <vector>
@@ -100,7 +114,7 @@ Token Lexer::make_number_(Position* pos) const {
 
   Position pend(*pos);
   pos->regress();
-  if(pos->character() == '.') {
+  if (pos->character() == '.') {
     pend = *pos;
   }
   pos->advance();
@@ -124,7 +138,7 @@ Token Lexer::make_number_(Position* pos) const {
         is_64bit = true;
         pos->advance();
       }
-    } while(false);
+    } while (false);
   } else {
     // This will be a floating-point type.
     if (pos->character() == 'f') {

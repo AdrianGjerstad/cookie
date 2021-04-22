@@ -76,18 +76,19 @@ int main(int argc, char** argv) {
   cookie::LexerResult lexer_out = lexer.lex(args.input);
 
   if (lexer_out.errors.size()) {
-    if(args.verbosity_level >= 1) {
+    if (args.verbosity_level >= 1) {
       std::cerr << VERBOSE_1 << "Encountered " << lexer_out.errors.size() <<
           " lexer errors" << std::endl;
     }
 
-    if(USE_COLOR) {
-      std::cerr << "\x1b[1;31mError in file '" << args.input << "':\x1b[0m" << std::endl;
+    if (USE_COLOR) {
+      std::cerr << "\x1b[1;31mError in file '" << args.input << "':\x1b[0m" <<
+          std::endl;
     } else {
       std::cerr << "Error in file '" << args.input << "':" << std::endl;
     }
 
-    for(unsigned int i = 0; i < lexer_out.errors.size(); ++i) {
+    for (unsigned int i = 0; i < lexer_out.errors.size(); ++i) {
       std::cerr << lexer_out.errors[i].to_string(USE_COLOR) << std::endl;
     }
 

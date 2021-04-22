@@ -42,6 +42,7 @@ class TokenType {
   static const TokenType RIGHT_PARENTHESIS;  // )
 
   static const TokenType END_OF_FILE;
+
  private:
   std::string repr_;
 };
