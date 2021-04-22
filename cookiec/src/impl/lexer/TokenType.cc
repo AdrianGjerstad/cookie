@@ -42,5 +42,11 @@ const TokenType TokenType::PERCENT = TokenType("percent");  // %
 const TokenType TokenType::LEFT_PARENTHESIS = TokenType("lparen");   // (
 const TokenType TokenType::RIGHT_PARENTHESIS = TokenType("rparen");  // )
 
+const TokenType TokenType::END_OF_FILE = TokenType("eof");
+
+bool operator ==(const TokenType& a, const TokenType& b) {
+  return a.to_string() == b.to_string();
+}
+
 }  // namespace cookie
 

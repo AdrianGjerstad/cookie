@@ -40,9 +40,13 @@ class TokenType {
 
   static const TokenType LEFT_PARENTHESIS;   // (
   static const TokenType RIGHT_PARENTHESIS;  // )
+
+  static const TokenType END_OF_FILE;
  private:
   std::string repr_;
 };
+
+bool operator ==(const TokenType&, const TokenType&);
 
 }  // namespace cookie
 

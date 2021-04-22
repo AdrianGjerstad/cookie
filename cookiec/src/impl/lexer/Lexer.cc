@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
 
 #include "../../include/lexer/Token.h"
 #include "../../include/lexer/TokenType.h"
@@ -67,6 +68,8 @@ LexerResult Lexer::lex(const std::string& filename) const {
       ));
     }
   }
+
+  result.tokens.push_back(Token(pos, pos, TokenType::END_OF_FILE));
 
   return result;
 }

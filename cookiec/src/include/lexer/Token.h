@@ -46,6 +46,8 @@ class Token {
   TokenType type_;
 };
 
+bool operator ==(const Token&, const Token&);
+
 }  // namespace cookie
 
 #endif  // COOKIEC_SRC_INCLUDE_LEXER_TOKEN_H_
