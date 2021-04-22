@@ -18,7 +18,9 @@ cc_binary(
     ":CommandLineInterface",
     ":CommandLineArguments",
     ":SourceCodePool",
-    ":Filesystem"
+    ":Filesystem",
+    ":Token",
+    ":Lexer"
   ]
 )
 
@@ -92,7 +94,42 @@ cc_library(
 )
 
 ################################################################################
-################################### LEXER ######################################
+#################################### ERRORS ####################################
+################################################################################
+
+# Error is the base class of all cookie compiler error types. It implements a
+# constructor taking in a start position, end position, and message. It also
+# implements a simple to_string method that formats the contents of the error
+# object into the format you see in the compiler's output
+cc_library(
+  name = "Error",
+  srcs = [ "src/impl/errors/Error.cc" ],
+  hdrs = [ "src/include/errors/Error.h" ],
+  deps = [
+    ":Position"
+  ]
+)
+
+# IllegalCharacterError is a derived class of Error that represents the lexer's
+# inability to interpret your garbled mess of code.
+cc_library(
+  name = "IllegalCharacterError",
+  srcs = [ "src/impl/errors/IllegalCharacterError.cc" ],
+  hdrs = [ "src/include/errors/IllegalCharacterError.h" ],
+  deps = [
+    ":Error",
+    ":Position"
+  ]
+)
+
+################################################################################
+################################### WARNINGS ###################################
+################################################################################
+
+
+
+################################################################################
+#################################### LEXER #####################################
 ################################################################################
 
 # Tokens are an essential part of the compiler, because they are the building
@@ -114,5 +151,33 @@ cc_library(
   name = "TokenType",
   srcs = [ "src/impl/lexer/TokenType.cc" ],
   hdrs = [ "src/include/lexer/TokenType.h" ]
+)
+
+# LexerResult is pretty self-explanatory. It's a data struct containing a list
+# of errors and tokens produced as an output by cookie::Lexer::lex.
+cc_library(
+  name = "LexerResult",
+  hdrs = [ "src/include/structs/LexerResult.h" ],
+  deps = [
+    ":Token",
+    ":Error"
+  ]
+)
+
+# Lexer is the first stage in compilation. Its job is to take in the raw source
+# code as a string (allocated on the heap), and convert it to bite-sized pieces
+# called tokens, which are what the Token and TokenType targets above are for.
+cc_library(
+  name = "Lexer",
+  srcs = [ "src/impl/lexer/Lexer.cc" ],
+  hdrs = [ "src/include/lexer/Lexer.h" ],
+  deps = [
+    ":Token",
+    ":TokenType",
+    ":Position",
+    ":SourceCodePool",
+    ":LexerResult",
+    ":IllegalCharacterError"
+  ]
 )
 
