@@ -15,6 +15,7 @@
 #include "../../include/errors/Error.h"
 
 #include <string>
+#include <cmath>
 
 #include "../../include/util/Position.h"
 
@@ -70,7 +71,8 @@ std::string Error::to_string(bool use_colors) {
   if (use_colors) res += "\x1b[34m";
 
   res += std::string(pstart_.col()-1, ' ') + "^" +
-      std::string(pend_.col()-pstart_.col()-1, '~');
+      std::string(std::max(
+          (int64_t) pend_.col()-(int64_t) pstart_.col()-1, 0l), '~');
 
   if (use_colors) res += "\x1b[0m";
 

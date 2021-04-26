@@ -40,14 +40,34 @@ class TokenType {
 
   static const TokenType LEFT_PARENTHESIS;   // (
   static const TokenType RIGHT_PARENTHESIS;  // )
+  static const TokenType LEFT_BRACE;         // {
+  static const TokenType RIGHT_BRACE;        // }
+  static const TokenType LEFT_BRACKET;       // [
+  static const TokenType RIGHT_BRACKET;      // ]
+
+  static const TokenType KW_DATA_TYPE;  // i32, i64, bool, etc.
+  static const TokenType KW_VOID;       // "void" literally (not as a string)
+  static const TokenType KW_RETURN;     // return
+  static const TokenType KW_CONST;      // const
+  static const TokenType KW_EXPORT;     // export
+  static const TokenType IDENTIFIER;    // Any variable name ever.
+
+  static const TokenType EQUALS;  // =
+
+  static const TokenType SEMICOLON;  // ;
+  static const TokenType COMMA;      // ,
 
   static const TokenType END_OF_FILE;
 
+  // Token does not actually exist, but is generated in stages like the parser
+  // for missing parameters names, for example.
+  static const TokenType NULL_TOKEN;
  private:
   std::string repr_;
 };
 
 bool operator ==(const TokenType&, const TokenType&);
+bool operator !=(const TokenType&, const TokenType&);
 
 }  // namespace cookie
 

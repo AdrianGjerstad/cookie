@@ -15,6 +15,7 @@
 #include "../../include/lexer/TokenType.h"
 
 #include <string>
+#include <iostream>
 
 namespace cookie {
 
@@ -41,11 +42,33 @@ const TokenType TokenType::PERCENT = TokenType("percent");  // %
 
 const TokenType TokenType::LEFT_PARENTHESIS = TokenType("lparen");   // (
 const TokenType TokenType::RIGHT_PARENTHESIS = TokenType("rparen");  // )
+const TokenType TokenType::LEFT_BRACE = TokenType("lbrace");         // {
+const TokenType TokenType::RIGHT_BRACE = TokenType("rbrace");        // }
+const TokenType TokenType::LEFT_BRACKET = TokenType("lbrack");       // [
+const TokenType TokenType::RIGHT_BRACKET = TokenType("rbrack");      // ]
+
+const TokenType TokenType::KW_DATA_TYPE = TokenType("kw:type");
+const TokenType TokenType::KW_VOID = TokenType("kw:void");
+const TokenType TokenType::KW_RETURN = TokenType("kw:ret");
+const TokenType TokenType::KW_CONST = TokenType("kw:const");
+const TokenType TokenType::KW_EXPORT = TokenType("kw:export");
+const TokenType TokenType::IDENTIFIER = TokenType("ident");
+
+const TokenType TokenType::EQUALS = TokenType("equals");  // =
+
+const TokenType TokenType::SEMICOLON = TokenType("semicolon");  // ;
+const TokenType TokenType::COMMA = TokenType("comma");          // ,
 
 const TokenType TokenType::END_OF_FILE = TokenType("eof");
 
+const TokenType TokenType::NULL_TOKEN = TokenType("nultok");
+
 bool operator ==(const TokenType& a, const TokenType& b) {
   return a.to_string() == b.to_string();
+}
+
+bool operator !=(const TokenType& a, const TokenType& b) {
+  return a.to_string() != b.to_string();
 }
 
 }  // namespace cookie

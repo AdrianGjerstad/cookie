@@ -12,33 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
-#define COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
+#include "../../include/errors/CommentError.h"
 
-#include <string>
-
-#include "Token.h"
-#include "TokenType.h"
-#include "../util/Position.h"
-#include "../util/SourceCodePool.h"
-#include "../structs/LexerResult.h"
+#include "../../include/errors/Error.h"
+#include "../../include/util/Position.h"
 
 namespace cookie {
 
-class Lexer {
- public:
-  explicit Lexer(const SourceCodePool*);
-
-  LexerResult lex(const std::string&) const;
-
- private:
-  const SourceCodePool* pool_;
-
-  Token make_number_(Position*) const;
-  Token make_identifier_(Position*) const;
-};
+CommentError::CommentError(
+    Position pstart, Position pend, std::string message) :
+    Error(pstart, pend, message, "comment-error") {
+  // Nothing to do
+}
 
 }  // namespace cookie
-
-#endif  // COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
 

@@ -15,6 +15,7 @@
 #include "../../include/lexer/Token.h"
 
 #include <string>
+#include <iostream>
 
 #include "../../include/lexer/TokenType.h"
 #include "../../include/util/Position.h"
@@ -27,6 +28,7 @@ Token::Token(Position pstart, Position pend, TokenType type) :
 }
 
 const std::string Token::to_string() const {
+  if (type_ == TokenType::NULL_TOKEN) return "cookie::Token<nultok>()";
   return
       std::string("cookie::Token<") + type_.to_string() +
       ">(\"" + get_value() + "\")";
@@ -71,6 +73,14 @@ const float Token::as_f32() const {
 
 const double Token::as_f64() const {
   return std::stod(get_value());
+}
+
+const Position& Token::pstart() const {
+  return pstart_;
+}
+
+const Position& Token::pend() const {
+  return pend_;
 }
 
 bool operator ==(const Token& a, const Token& b) {
