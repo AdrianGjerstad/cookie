@@ -23,7 +23,12 @@ class Parser {
   ParserResult arglist_(const std::vector<Token>*, unsigned int*) const;
   ParserResult codebody_(const std::vector<Token>*, unsigned int*) const;
   ParserResult statement_(const std::vector<Token>*, unsigned int*) const;
+  ParserResult conditional_(const std::vector<Token>*, unsigned int*) const;
   ParserResult expression_(const std::vector<Token>*, unsigned int*) const;
+  ParserResult condexpr_(const std::vector<Token>*, unsigned int*) const;
+  ParserResult bitexpr_(const std::vector<Token>*, unsigned int*) const;
+  ParserResult bitshexpr_(const std::vector<Token>*, unsigned int*) const;
+  ParserResult arithexpr_(const std::vector<Token>*, unsigned int*) const;
   ParserResult term_(const std::vector<Token>*, unsigned int*) const;
   ParserResult factor_(const std::vector<Token>*, unsigned int*) const;
 };

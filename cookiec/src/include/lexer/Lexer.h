@@ -36,6 +36,10 @@ class Lexer {
 
   Token make_number_(Position*) const;
   Token make_identifier_(Position*) const;
+
+  Token make_lt_(Position*) const;
+  Token make_gt_(Position*) const;
+  Token make_equals_(Position*) const;
 };
 
 }  // namespace cookie

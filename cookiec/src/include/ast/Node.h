@@ -18,7 +18,9 @@ class Node {
   static const unsigned int ARGUMENT_LIST;
   static const unsigned int BINARY_OPERATION;
   static const unsigned int CODE_BODY;
+  static const unsigned int CONDITIONAL;
   static const unsigned int FUNCTION;
+  static const unsigned int FUNCTION_CALL;
   static const unsigned int GLOBAL_DEFINITION;
   static const unsigned int LITERAL;
   static const unsigned int NO_OPERATION;

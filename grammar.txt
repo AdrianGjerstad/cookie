@@ -1,26 +1,40 @@
-TODO: IMPLEMENT GLOBALS
+globalbody  : globalitem*
 
-globalbody : globalitem*
+globalitem  : KEYWORD:EXPORT? KEYWORD:CONST? (KEYWORD:_TYPE_|KEYWORD:VOID) IDENTIFIER arglist LBRACE codebody RBRACE
+            : KEYWORD:EXPORT? KEYWORD:CONST? KEYWORD:_TYPE_ IDENTIFIER EQUALS expression SEMICOLON
 
-globalitem : KEYWORD:EXPORT? KEYWORD:CONST? (KEYWORD:_TYPE_|KEYWORD:VOID) IDENTIFIER arglist LBRACE codebody RBRACE
-           : KEYWORD:EXPORT? KEYWORD:CONST? KEYWORD:_TYPE_ IDENTIFIER EQUALS expression SEMICOLON
+arglist     : LPAREN RPAREN
+            : LPAREN KEYWORD:_TYPE_ IDENTIFIER? (COMMA KEYWORD:_TYPE_ IDENTIFIER?)* RPAREN
 
-arglist    : LPAREN RPAREN
-           : LPAREN KEYWORD:_TYPE_ IDENTIFIER? (COMMA KEYWORD:_TYPE_ IDENTIFIER?)* RPAREN
+codebody    : statement*
 
-codebody   : statement*
+statement   : SEMICOLON
+            : KEYWORD:CONST? KEYWORD:_TYPE_ IDENTIFIER (EQUALS expression)? SEMICOLON
+            : KEYWORD:RETURN expression? SEMICOLON
+            : conditional
+            : expression SEMICOLON
 
-statement  : SEMICOLON
-           : KEYWORD:CONST? KEYWORD:_TYPE_ IDENTIFIER (EQUALS expression)? SEMICOLON
-           : KEYWORD:RETURN expression? SEMICOLON
-           : expression SEMICOLON
+conditional : KEYWORD:IF LPAREN expression RPAREN LBRACE codebody RBRACE (KEYWORD:ELSE LBRACE codebody RBRACE)?
+            : KEYWORD:IF LPAREN expression RPAREN LBRACE codebody RBRACE (KEYWORD:ELSE statement)?
+            : KEYWORD:IF LPAREN expression RPAREN statement (KEYWORD:ELSE LBRACE codebody RBRACE)?
+            : KEYWORD:IF LPAREN expression RPAREN statement (KEYWORD:ELSE statement)?
 
-expression : term ((PLUS|MINUS) term)*
+expression  : condexpr ((DUBAMP|DUBPIPE|DUBCARET) condexpr)*
 
-term       : factor ((STAR|SLASH|PERCENT) factor)*
+condexpr    : bitexpr ((DUBEQUALS|BANGEQUALS|LESS|GREATER|LESSEQUALS|GREATEREQUALS) bitexpr)*
 
-factor     : (I32|U32|I64|U64|F32|F64|IDENTIFIER)
-           : (PLUS|MINUS) factor
-           : IDENTIFIER EQUALS expression
-           : LPAREN expr RPAREN
+bitexpr     : bitshexpr ((AMPERSAND|PIPE|CARET) bitshexpr)*
+
+bitshexpr   : arithexpr ((DUBGRTH|DUBLSTH) arithexpr)*
+
+arithexpr   : term ((PLUS|MINUS) term)*
+
+term        : factor ((STAR|SLASH|PERCENT) factor)*
+
+factor      : (I32|U32|I64|U64|F32|F64|BOOL|IDENTIFIER)
+            : (PLUS|MINUS|TILDE|BANG) factor
+            : IDENTIFIER EQUALS expression
+            : IDENTIFIER LPAREN RPAREN
+            : IDENTIFIER LPAREN expression (COMMA expression)* RPAREN
+            : LPAREN expression RPAREN
 

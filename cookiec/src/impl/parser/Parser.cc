@@ -22,6 +22,8 @@
 #include "../../include/ast/SymbolDefinitionNode.h"
 #include "../../include/ast/ReturnNode.h"
 #include "../../include/ast/GlobalDefinitionNode.h"
+#include "../../include/ast/FunctionCallNode.h"
+#include "../../include/ast/ConditionalNode.h"
 
 #include "../../include/errors/SyntaxError.h"
 
@@ -381,6 +383,12 @@ ParserResult Parser::statement_(
         new ReturnNode(std::shared_ptr<Node>(new NoOperationNode()))));
   }
 
+  if (tokens->at(*index).type() == TokenType::KW_IF) {
+    std::shared_ptr<Node> cond = result.use(conditional_(tokens, index));
+    if (result.errors.size()) return result;
+    return result.success(cond);
+  }
+
   std::shared_ptr<Node> expr = result.use(expression_(tokens, index));
   if (result.errors.size()) return result;
 
@@ -397,7 +405,222 @@ ParserResult Parser::statement_(
   return result.success(expr);
 }
 
+ParserResult Parser::conditional_(
+    const std::vector<Token>* tokens,
+    unsigned int* index) const {
+  ParserResult result;
+
+  if (tokens->at(*index).type() != TokenType::KW_IF) {
+    return result.failure(SyntaxError(
+      tokens->at(*index).pstart(), tokens->at(*index).pend(),
+      "Expected 'if'"
+    ));
+  }
+
+  advance_(tokens, index);
+
+  if (tokens->at(*index).type() != TokenType::LEFT_PARENTHESIS) {
+    return result.failure(SyntaxError(
+      tokens->at(*index).pstart(), tokens->at(*index).pend(),
+      "Expected '(' after 'if' token"
+    ));
+  }
+
+  advance_(tokens, index);
+
+  std::shared_ptr<Node> cond = result.use(expression_(tokens, index));
+  if (result.errors.size()) return result;
+
+  if (tokens->at(*index).type() != TokenType::RIGHT_PARENTHESIS) {
+    return result.failure(SyntaxError(
+      tokens->at(*index).pstart(), tokens->at(*index).pend(),
+      "Expected ')' after conditional expression"
+    ));
+  }
+
+  advance_(tokens, index);
+
+  if (tokens->at(*index).type() == TokenType::LEFT_BRACE) {
+    advance_(tokens, index);
+
+    std::shared_ptr<Node> body = result.use(codebody_(tokens, index));
+    if (result.errors.size()) return result;
+
+    if (tokens->at(*index).type() != TokenType::RIGHT_BRACE) {
+      return result.failure(SyntaxError(
+        tokens->at(*index).pstart(), tokens->at(*index).pend(),
+        "Expected '}' after code body"
+      ));
+    }
+
+    advance_(tokens, index);
+
+    if (tokens->at(*index).type() == TokenType::KW_ELSE) {
+      advance_(tokens, index);
+
+      if (tokens->at(*index).type() == TokenType::LEFT_BRACE) {
+        advance_(tokens, index);
+
+        std::shared_ptr<Node> elsebody = result.use(codebody_(tokens, index));
+        if (result.errors.size()) return result;
+
+        if (tokens->at(*index).type() != TokenType::RIGHT_BRACE) {
+          return result.failure(SyntaxError(
+            tokens->at(*index).pstart(), tokens->at(*index).pend(),
+            "Expected '}' after code body"
+          ));
+        }
+
+        advance_(tokens, index);
+
+        return result.success(std::shared_ptr<Node>(
+            new ConditionalNode(cond, body, elsebody)));
+      }
+
+      std::shared_ptr<Node> elsebody = result.use(statement_(tokens, index));
+      if (result.errors.size()) return result;
+
+      return result.success(std::shared_ptr<Node>(
+          new ConditionalNode(cond, body, elsebody)));
+    }
+
+    return result.success(std::shared_ptr<Node>(
+        new ConditionalNode(cond, body, std::shared_ptr<Node>(
+            new NoOperationNode()))));
+  } else {
+    std::shared_ptr<Node> body = result.use(statement_(tokens, index));
+    if (result.errors.size()) return result;
+
+    if (tokens->at(*index).type() == TokenType::KW_ELSE) {
+      advance_(tokens, index);
+
+      if (tokens->at(*index).type() == TokenType::LEFT_BRACE) {
+        advance_(tokens, index);
+
+        std::shared_ptr<Node> elsebody = result.use(codebody_(tokens, index));
+        if (result.errors.size()) return result;
+
+        if (tokens->at(*index).type() != TokenType::RIGHT_BRACE) {
+          return result.failure(SyntaxError(
+            tokens->at(*index).pstart(), tokens->at(*index).pend(),
+            "Expected '}' after code body"
+          ));
+        }
+
+        advance_(tokens, index);
+
+        return result.success(std::shared_ptr<Node>(
+            new ConditionalNode(cond, body, elsebody)));
+      }
+
+      std::shared_ptr<Node> elsebody = result.use(statement_(tokens, index));
+      if (result.errors.size()) return result;
+
+      return result.success(std::shared_ptr<Node>(
+          new ConditionalNode(cond, body, elsebody)));
+    }
+
+    return result.success(std::shared_ptr<Node>(
+        new ConditionalNode(cond, body, std::shared_ptr<Node>(
+            new NoOperationNode()))));
+  }
+}
+
 ParserResult Parser::expression_(
+    const std::vector<Token>* tokens,
+    unsigned int* index) const {
+  ParserResult result;
+
+  std::shared_ptr<Node> left = result.use(condexpr_(tokens, index));
+  if (result.errors.size()) return result;
+
+  while (tokens->at(*index).type() == TokenType::DOUBLE_AMPERSAND ||
+      tokens->at(*index).type() == TokenType::DOUBLE_PIPE ||
+      tokens->at(*index).type() == TokenType::DOUBLE_CARET) {
+    const Token& op = tokens->at(*index);
+    advance_(tokens, index);
+
+    std::shared_ptr<Node> right = result.use(condexpr_(tokens, index));
+    if (result.errors.size()) return result;
+
+    left = std::shared_ptr<Node>(new BinaryOperationNode(left, op, right));
+  }
+
+  return result.success(left);
+}
+
+ParserResult Parser::condexpr_(
+    const std::vector<Token>* tokens,
+    unsigned int* index) const {
+  ParserResult result;
+
+  std::shared_ptr<Node> left = result.use(bitexpr_(tokens, index));
+  if (result.errors.size()) return result;
+
+  while (tokens->at(*index).type() == TokenType::DOUBLE_EQUALS ||
+      tokens->at(*index).type() == TokenType::BANG_EQUALS ||
+      tokens->at(*index).type() == TokenType::LESS ||
+      tokens->at(*index).type() == TokenType::GREATER ||
+      tokens->at(*index).type() == TokenType::LESS_EQUALS ||
+      tokens->at(*index).type() == TokenType::GREATER_EQUALS) {
+    const Token& op = tokens->at(*index);
+    advance_(tokens, index);
+
+    std::shared_ptr<Node> right = result.use(bitexpr_(tokens, index));
+    if (result.errors.size()) return result;
+
+    left = std::shared_ptr<Node>(new BinaryOperationNode(left, op, right));
+  }
+
+  return result.success(left);
+}
+
+ParserResult Parser::bitexpr_(
+    const std::vector<Token>* tokens,
+    unsigned int* index) const {
+  ParserResult result;
+
+  std::shared_ptr<Node> left = result.use(bitshexpr_(tokens, index));
+  if (result.errors.size()) return result;
+
+  while (tokens->at(*index).type() == TokenType::AMPERSAND ||
+      tokens->at(*index).type() == TokenType::PIPE ||
+      tokens->at(*index).type() == TokenType::CARET) {
+    const Token& op = tokens->at(*index);
+    advance_(tokens, index);
+
+    std::shared_ptr<Node> right = result.use(bitshexpr_(tokens, index));
+    if (result.errors.size()) return result;
+
+    left = std::shared_ptr<Node>(new BinaryOperationNode(left, op, right));
+  }
+
+  return result.success(left);
+}
+
+ParserResult Parser::bitshexpr_(
+    const std::vector<Token>* tokens,
+    unsigned int* index) const {
+  ParserResult result;
+
+  std::shared_ptr<Node> left = result.use(arithexpr_(tokens, index));
+  if (result.errors.size()) return result;
+
+  while (tokens->at(*index).type() == TokenType::DOUBLE_LESS ||
+      tokens->at(*index).type() == TokenType::DOUBLE_GREATER) {
+    const Token& op = tokens->at(*index);
+    advance_(tokens, index);
+
+    std::shared_ptr<Node> right = result.use(arithexpr_(tokens, index));
+    if (result.errors.size()) return result;
+
+    left = std::shared_ptr<Node>(new BinaryOperationNode(left, op, right));
+  }
+
+  return result.success(left);
+}
+
+ParserResult Parser::arithexpr_(
     const std::vector<Token>* tokens,
     unsigned int* index) const {
   ParserResult result;
@@ -405,8 +628,8 @@ ParserResult Parser::expression_(
   std::shared_ptr<Node> left = result.use(term_(tokens, index));
   if (result.errors.size()) return result;
 
-  while (tokens->at(*index).type() == TokenType::PLUS ||
-      tokens->at(*index).type() == TokenType::MINUS) {
+  while (tokens->at(*index).type() == TokenType::PLUS ||  // Arithmetic: Add
+      tokens->at(*index).type() == TokenType::MINUS) {    // Arithmetic: Sub
     const Token& op = tokens->at(*index);
     advance_(tokens, index);
 
@@ -427,9 +650,9 @@ ParserResult Parser::term_(
   std::shared_ptr<Node> left = result.use(factor_(tokens, index));
   if (result.errors.size()) return result;
 
-  while (tokens->at(*index).type() == TokenType::STAR ||
-      tokens->at(*index).type() == TokenType::SLASH ||
-      tokens->at(*index).type() == TokenType::PERCENT) {
+  while (tokens->at(*index).type() == TokenType::STAR ||  // Arithmetic: Mult
+      tokens->at(*index).type() == TokenType::SLASH ||    // Arithmetic: Divide
+      tokens->at(*index).type() == TokenType::PERCENT) {  // Arithmetic: Mod
     const Token& op = tokens->at(*index);
     advance_(tokens, index);
 
@@ -488,18 +711,57 @@ ParserResult Parser::factor_(
       type == TokenType::INT64 ||
       type == TokenType::UINT64 ||
       type == TokenType::FLOAT32 ||
-      type == TokenType::FLOAT64) {
+      type == TokenType::FLOAT64 ||
+      type == TokenType::BOOLEAN) {
     std::shared_ptr<Node> literal =
         std::shared_ptr<Node>(new LiteralNode(tokens->at(*index)));
     advance_(tokens, index);
     return result.success(literal);
   } else if (type == TokenType::IDENTIFIER) {
-    std::shared_ptr<Node> var =
-        std::shared_ptr<Node>(new SymbolReferenceNode(tokens->at(*index)));
+    const Token& name = tokens->at(*index);
     advance_(tokens, index);
-    return result.success(var);
-  } else if (type == TokenType::PLUS ||
-      type == TokenType::MINUS) {
+
+    if (tokens->at(*index).type() == TokenType::LEFT_PARENTHESIS) {
+      advance_(tokens, index);
+
+      if (tokens->at(*index).type() == TokenType::RIGHT_PARENTHESIS) {
+        advance_(tokens, index);
+        return result.success(std::shared_ptr<Node>(
+            new FunctionCallNode(name, {})));
+      } else {
+        std::vector<std::shared_ptr<Node>> args;
+
+        args.push_back(result.use(expression_(tokens, index)));
+        if (result.errors.size()) return result;
+
+        while (tokens->at(*index).type() == TokenType::COMMA) {
+          advance_(tokens, index);
+
+          args.push_back(result.use(expression_(tokens, index)));
+          if (result.errors.size()) return result;
+        }
+
+        if (tokens->at(*index).type() != TokenType::RIGHT_PARENTHESIS) {
+          return result.failure(SyntaxError(
+            tokens->at(*index).pstart(), tokens->at(*index).pend(),
+            "Expected ')' before token"
+          ));
+        }
+
+        advance_(tokens, index);
+
+        return result.success(std::shared_ptr<Node>(
+            new FunctionCallNode(name, args)));
+      }
+    } else {
+      std::shared_ptr<Node> var =
+          std::shared_ptr<Node>(new SymbolReferenceNode(name));
+      return result.success(var);
+    }
+  } else if (type == TokenType::PLUS ||  // Arithmetic: Addition (prepended nop)
+      type == TokenType::MINUS ||        // Arithmetic: Subtraction (invert)
+      type == TokenType::TILDE ||        // Bitwise: Negation
+      type == TokenType::BANG) {         // Logic: Inversion
     const Token& token = tokens->at(*index);
     advance_(tokens, index);
 

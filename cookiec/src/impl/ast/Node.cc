@@ -34,14 +34,16 @@ const unsigned int Node::ABSTRACT_SYNTAX_TREE = 1;
 const unsigned int Node::ARGUMENT_LIST = 2;
 const unsigned int Node::BINARY_OPERATION = 3;
 const unsigned int Node::CODE_BODY = 4;
-const unsigned int Node::FUNCTION = 5;
-const unsigned int Node::GLOBAL_DEFINITION = 6;
-const unsigned int Node::LITERAL = 7;
-const unsigned int Node::NO_OPERATION = 8;
-const unsigned int Node::RETURN = 9;
-const unsigned int Node::SYMBOL_DEFINITION = 10;
-const unsigned int Node::SYMBOL_REFERENCE = 11;
-const unsigned int Node::UNARY_OPERATION = 12;
+const unsigned int Node::CONDITIONAL = 5;
+const unsigned int Node::FUNCTION = 6;
+const unsigned int Node::FUNCTION_CALL = 7;
+const unsigned int Node::GLOBAL_DEFINITION = 8;
+const unsigned int Node::LITERAL = 9;
+const unsigned int Node::NO_OPERATION = 10;
+const unsigned int Node::RETURN = 11;
+const unsigned int Node::SYMBOL_DEFINITION = 12;
+const unsigned int Node::SYMBOL_REFERENCE = 13;
+const unsigned int Node::UNARY_OPERATION = 14;
 
 }  // namespace cookie
 
