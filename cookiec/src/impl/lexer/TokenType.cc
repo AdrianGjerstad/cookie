@@ -72,6 +72,9 @@ const TokenType TokenType::KW_CONST = TokenType("kw:const");
 const TokenType TokenType::KW_EXPORT = TokenType("kw:export");
 const TokenType TokenType::KW_IF = TokenType("kw:if");
 const TokenType TokenType::KW_ELSE = TokenType("kw:else");
+const TokenType TokenType::KW_FOR = TokenType("kw:for");
+const TokenType TokenType::KW_WHILE = TokenType("kw:while");
+const TokenType TokenType::KW_DO = TokenType("kw:do");
 const TokenType TokenType::IDENTIFIER = TokenType("ident");
 
 const TokenType TokenType::EQUALS = TokenType("equals");  // =

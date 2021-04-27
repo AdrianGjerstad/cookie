@@ -1,4 +1,4 @@
-globalbody  : globalitem*
+globalbody  : globalitem* EOF
 
 globalitem  : KEYWORD:EXPORT? KEYWORD:CONST? (KEYWORD:_TYPE_|KEYWORD:VOID) IDENTIFIER arglist LBRACE codebody RBRACE
             : KEYWORD:EXPORT? KEYWORD:CONST? KEYWORD:_TYPE_ IDENTIFIER EQUALS expression SEMICOLON
@@ -12,12 +12,19 @@ statement   : SEMICOLON
             : KEYWORD:CONST? KEYWORD:_TYPE_ IDENTIFIER (EQUALS expression)? SEMICOLON
             : KEYWORD:RETURN expression? SEMICOLON
             : conditional
+            : loop
             : expression SEMICOLON
 
 conditional : KEYWORD:IF LPAREN expression RPAREN LBRACE codebody RBRACE (KEYWORD:ELSE LBRACE codebody RBRACE)?
             : KEYWORD:IF LPAREN expression RPAREN LBRACE codebody RBRACE (KEYWORD:ELSE statement)?
             : KEYWORD:IF LPAREN expression RPAREN statement (KEYWORD:ELSE LBRACE codebody RBRACE)?
             : KEYWORD:IF LPAREN expression RPAREN statement (KEYWORD:ELSE statement)?
+
+loop        : KEYWORD:WHILE LPAREN expression RPAREN LBRACE codebody RBRACE
+            : KEYWORD:WHILE LPAREN expression RPAREN statement
+            : KEYWORD:FOR LPAREN statement expression SEMICOLON expression RPAREN LBRACE codebody RBRACE
+            : KEYWORD:FOR LPAREN statement expression SEMICOLON expression RPAREN statement
+            : KEYWORD:DO LBRACE codebody RBRACE KEYWORD:WHILE LPAREN expression RPAREN SEMICOLON
 
 expression  : condexpr ((DUBAMP|DUBPIPE|DUBCARET) condexpr)*
 

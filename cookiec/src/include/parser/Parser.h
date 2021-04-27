@@ -24,6 +24,7 @@ class Parser {
   ParserResult codebody_(const std::vector<Token>*, unsigned int*) const;
   ParserResult statement_(const std::vector<Token>*, unsigned int*) const;
   ParserResult conditional_(const std::vector<Token>*, unsigned int*) const;
+  ParserResult loop_(const std::vector<Token>*, unsigned int*) const;
   ParserResult expression_(const std::vector<Token>*, unsigned int*) const;
   ParserResult condexpr_(const std::vector<Token>*, unsigned int*) const;
   ParserResult bitexpr_(const std::vector<Token>*, unsigned int*) const;

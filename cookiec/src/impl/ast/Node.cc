@@ -35,15 +35,17 @@ const unsigned int Node::ARGUMENT_LIST = 2;
 const unsigned int Node::BINARY_OPERATION = 3;
 const unsigned int Node::CODE_BODY = 4;
 const unsigned int Node::CONDITIONAL = 5;
-const unsigned int Node::FUNCTION = 6;
-const unsigned int Node::FUNCTION_CALL = 7;
-const unsigned int Node::GLOBAL_DEFINITION = 8;
-const unsigned int Node::LITERAL = 9;
-const unsigned int Node::NO_OPERATION = 10;
-const unsigned int Node::RETURN = 11;
-const unsigned int Node::SYMBOL_DEFINITION = 12;
-const unsigned int Node::SYMBOL_REFERENCE = 13;
-const unsigned int Node::UNARY_OPERATION = 14;
+const unsigned int Node::FOR_LOOP = 6;
+const unsigned int Node::FUNCTION = 7;
+const unsigned int Node::FUNCTION_CALL = 8;
+const unsigned int Node::GLOBAL_DEFINITION = 9;
+const unsigned int Node::LITERAL = 10;
+const unsigned int Node::NO_OPERATION = 11;
+const unsigned int Node::RETURN = 12;
+const unsigned int Node::SYMBOL_DEFINITION = 13;
+const unsigned int Node::SYMBOL_REFERENCE = 14;
+const unsigned int Node::UNARY_OPERATION = 15;
+const unsigned int Node::WHILE_LOOP = 16;
 
 }  // namespace cookie
 

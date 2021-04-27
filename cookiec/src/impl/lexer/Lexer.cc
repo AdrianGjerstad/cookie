@@ -337,6 +337,12 @@ Token Lexer::make_identifier_(Position* pos) const {
     return Token(pstart, pend, TokenType::KW_IF);
   } else if (tmp == "else") {
     return Token(pstart, pend, TokenType::KW_ELSE);
+  } else if (tmp == "for") {
+    return Token(pstart, pend, TokenType::KW_FOR);
+  } else if (tmp == "while") {
+    return Token(pstart, pend, TokenType::KW_WHILE);
+  } else if (tmp == "do") {
+    return Token(pstart, pend, TokenType::KW_DO);
   }
 
   return Token(pstart, pend, TokenType::IDENTIFIER);

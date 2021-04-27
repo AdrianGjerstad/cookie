@@ -75,6 +75,9 @@ class TokenType {
   static const TokenType KW_EXPORT;     // export
   static const TokenType KW_IF;         // if
   static const TokenType KW_ELSE;       // else
+  static const TokenType KW_FOR;        // for
+  static const TokenType KW_WHILE;      // while
+  static const TokenType KW_DO;         // do
   // VARIABLES, FUNCTIONS, GLOBALS, ETC.
   static const TokenType IDENTIFIER;    // Any variable name ever.
 

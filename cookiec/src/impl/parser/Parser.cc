@@ -24,6 +24,8 @@
 #include "../../include/ast/GlobalDefinitionNode.h"
 #include "../../include/ast/FunctionCallNode.h"
 #include "../../include/ast/ConditionalNode.h"
+#include "../../include/ast/ForLoopNode.h"
+#include "../../include/ast/WhileLoopNode.h"
 
 #include "../../include/errors/SyntaxError.h"
 
@@ -389,6 +391,14 @@ ParserResult Parser::statement_(
     return result.success(cond);
   }
 
+  if (tokens->at(*index).type() == TokenType::KW_FOR ||
+      tokens->at(*index).type() == TokenType::KW_WHILE ||
+      tokens->at(*index).type() == TokenType::KW_DO) {
+    std::shared_ptr<Node> loop = result.use(loop_(tokens, index));
+    if (result.errors.size()) return result;
+    return result.success(loop);
+  }
+
   std::shared_ptr<Node> expr = result.use(expression_(tokens, index));
   if (result.errors.size()) return result;
 
@@ -523,6 +533,195 @@ ParserResult Parser::conditional_(
     return result.success(std::shared_ptr<Node>(
         new ConditionalNode(cond, body, std::shared_ptr<Node>(
             new NoOperationNode()))));
+  }
+}
+
+ParserResult Parser::loop_(
+    const std::vector<Token>* tokens,
+    unsigned int* index) const {
+  ParserResult result;
+
+  if (tokens->at(*index).type() == TokenType::KW_FOR) {
+    advance_(tokens, index);
+
+    if (tokens->at(*index).type() != TokenType::LEFT_PARENTHESIS) {
+      return result.failure(SyntaxError(
+        tokens->at(*index).pstart(), tokens->at(*index).pend(),
+        "Expected '(' after 'for' keyword"
+      ));
+    }
+
+    advance_(tokens, index);
+
+    std::shared_ptr<Node> init_expr = result.use(statement_(tokens, index));
+    if (result.errors.size()) return result;
+
+    std::shared_ptr<Node> check_expr = result.use(expression_(tokens, index));
+    if (result.errors.size()) return result;
+
+    if (tokens->at(*index).type() != TokenType::SEMICOLON) {
+      return result.failure(SyntaxError(
+        tokens->at(*index).pstart(), tokens->at(*index).pend(),
+        "Expected ';' after expression"
+      ));
+    }
+
+    advance_(tokens, index);
+
+    std::shared_ptr<Node> post_expr = result.use(expression_(tokens, index));
+    if (result.errors.size()) return result;
+
+    if (tokens->at(*index).type() != TokenType::RIGHT_PARENTHESIS) {
+      return result.failure(SyntaxError(
+        tokens->at(*index).pstart(), tokens->at(*index).pend(),
+        "Expected ')' after expression"
+      ));
+    }
+
+    advance_(tokens, index);
+
+    if (tokens->at(*index).type() == TokenType::LEFT_BRACE) {
+      advance_(tokens, index);
+
+      std::shared_ptr<Node> body = result.use(codebody_(tokens, index));
+      if (result.errors.size()) return result;
+
+      if (tokens->at(*index).type() != TokenType::RIGHT_BRACE) {
+        return result.failure(SyntaxError(
+          tokens->at(*index).pstart(), tokens->at(*index).pend(),
+          "Expected '}' after body"
+        ));
+      }
+
+      advance_(tokens, index);
+
+      return result.success(std::shared_ptr<Node>(
+          new ForLoopNode(init_expr, check_expr, post_expr, body)));
+    } else {
+      std::shared_ptr<Node> body = result.use(statement_(tokens, index));
+      if (result.errors.size()) return result;
+
+      return result.success(std::shared_ptr<Node>(
+          new ForLoopNode(init_expr, check_expr, post_expr, body)));
+    }
+  } else if (tokens->at(*index).type() == TokenType::KW_WHILE) {
+    advance_(tokens, index);
+
+    if (tokens->at(*index).type() != TokenType::LEFT_PARENTHESIS) {
+      return result.failure(SyntaxError(
+        tokens->at(*index).pstart(), tokens->at(*index).pend(),
+        "Expected '(' after 'while' keyword"
+      ));
+    }
+
+    advance_(tokens, index);
+
+    std::shared_ptr<Node> check_expr = result.use(expression_(tokens, index));
+    if (result.errors.size()) return result;
+
+    if (tokens->at(*index).type() != TokenType::RIGHT_PARENTHESIS) {
+      return result.failure(SyntaxError(
+        tokens->at(*index).pstart(), tokens->at(*index).pend(),
+        "Expected ')' after expression"
+      ));
+    }
+
+    advance_(tokens, index);
+
+    if (tokens->at(*index).type() == TokenType::LEFT_BRACE) {
+      advance_(tokens, index);
+
+      std::shared_ptr<Node> body = result.use(codebody_(tokens, index));
+      if (result.errors.size()) return result;
+
+      if (tokens->at(*index).type() != TokenType::RIGHT_BRACE) {
+        return result.failure(SyntaxError(
+          tokens->at(*index).pstart(), tokens->at(*index).pend(),
+          "Expected '}' after body"
+        ));
+      }
+
+      advance_(tokens, index);
+
+      return result.success(std::shared_ptr<Node>(
+          new WhileLoopNode(true, check_expr, body)));
+    } else {
+      std::shared_ptr<Node> body = result.use(statement_(tokens, index));
+      if (result.errors.size()) return result;
+
+      return result.success(std::shared_ptr<Node>(
+          new WhileLoopNode(true, check_expr, body)));
+    }
+  } else if (tokens->at(*index).type() == TokenType::KW_DO) {
+    advance_(tokens, index);
+
+    if (tokens->at(*index).type() != TokenType::LEFT_BRACE) {
+      return result.failure(SyntaxError(
+        tokens->at(*index).pstart(), tokens->at(*index).pend(),
+        "Expected '{' after 'do' keyword"
+      ));
+    }
+
+    advance_(tokens, index);
+
+    std::shared_ptr<Node> body = result.use(codebody_(tokens, index));
+    if (result.errors.size()) return result;
+
+    if (tokens->at(*index).type() != TokenType::RIGHT_BRACE) {
+      return result.failure(SyntaxError(
+        tokens->at(*index).pstart(), tokens->at(*index).pend(),
+        "Expected '}' after body"
+      ));
+    }
+
+    advance_(tokens, index);
+
+    if (tokens->at(*index).type() != TokenType::KW_WHILE) {
+      return result.failure(SyntaxError(
+        tokens->at(*index).pstart(), tokens->at(*index).pend(),
+        "Expected 'while' after '}'"
+      ));
+    }
+
+    advance_(tokens, index);
+
+    if (tokens->at(*index).type() != TokenType::LEFT_PARENTHESIS) {
+      return result.failure(SyntaxError(
+        tokens->at(*index).pstart(), tokens->at(*index).pend(),
+        "Expected '(' after 'while' keyword"
+      ));
+    }
+
+    advance_(tokens, index);
+
+    std::shared_ptr<Node> check_expr = result.use(expression_(tokens, index));
+    if (result.errors.size()) return result;
+
+    if (tokens->at(*index).type() != TokenType::RIGHT_PARENTHESIS) {
+      return result.failure(SyntaxError(
+        tokens->at(*index).pstart(), tokens->at(*index).pend(),
+        "Expected ')' after expression"
+      ));
+    }
+
+    advance_(tokens, index);
+
+    if (tokens->at(*index).type() != TokenType::SEMICOLON) {
+      return result.failure(SyntaxError(
+        tokens->at(*index).pstart(), tokens->at(*index).pend(),
+        "Expected ';' after while atom"
+      ));
+    }
+
+    advance_(tokens, index);
+
+    return result.success(std::shared_ptr<Node>(
+        new WhileLoopNode(false, check_expr, body)));
+  } else {
+    return result.failure(SyntaxError(
+      tokens->at(*index).pstart(), tokens->at(*index).pend(),
+      "Expected 'for', 'while', or 'do' keyword"
+    ));
   }
 }
 

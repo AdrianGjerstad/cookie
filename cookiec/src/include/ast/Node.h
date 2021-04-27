@@ -19,6 +19,7 @@ class Node {
   static const unsigned int BINARY_OPERATION;
   static const unsigned int CODE_BODY;
   static const unsigned int CONDITIONAL;
+  static const unsigned int FOR_LOOP;
   static const unsigned int FUNCTION;
   static const unsigned int FUNCTION_CALL;
   static const unsigned int GLOBAL_DEFINITION;
@@ -28,6 +29,7 @@ class Node {
   static const unsigned int SYMBOL_DEFINITION;
   static const unsigned int SYMBOL_REFERENCE;
   static const unsigned int UNARY_OPERATION;
+  static const unsigned int WHILE_LOOP;
 
  protected:
   std::string string_depth_pre_(int) const;
