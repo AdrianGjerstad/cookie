@@ -104,6 +104,7 @@ class TokenType {
   // Token does not actually exist, but is generated in stages like the parser
   // for missing parameters names, for example.
   static const TokenType NULL_TOKEN;
+
  private:
   std::string repr_;
 };

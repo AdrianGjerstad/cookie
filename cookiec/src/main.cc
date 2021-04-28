@@ -168,8 +168,8 @@ int main(int argc, char** argv) {
 
       std::string tree = VERBOSE_2 + parser_out.tree->to_string(0, USE_COLOR);
 
-      for(unsigned int i = 0; i < tree.size(); ++i) {
-        if(tree[i] == '\n') {
+      for (unsigned int i = 0; i < tree.size(); ++i) {
+        if (tree[i] == '\n') {
           tree.insert(i + 1, VERBOSE_2);
         }
       }

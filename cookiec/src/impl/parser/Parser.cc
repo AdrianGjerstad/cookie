@@ -1,3 +1,17 @@
+// Copyright 2021 Adrian Gjerstad
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #include "../../include/parser/Parser.h"
 
 #include <vector>
@@ -43,8 +57,7 @@ ParserResult Parser::parse(const std::vector<Token>* tokens) const {
       tokens->at(index).type() != TokenType::END_OF_FILE) {
     return result.failure(SyntaxError(
       tokens->at(index).pstart(), tokens->at(index).pend(),
-      "Expected EOF"
-    ));
+      "Expected EOF"));
   }
 
   return result;
@@ -54,7 +67,7 @@ const Token& Parser::advance_(
     const std::vector<Token>* tokens,
     unsigned int* index) const {
   unsigned int& idx_ref = (*index);
-  if(tokens->size() == idx_ref + 1) return tokens->at(*index);
+  if (tokens->size() == idx_ref + 1) return tokens->at(*index);
 
   ++idx_ref;
 
@@ -110,8 +123,7 @@ ParserResult Parser::globalitem_(
       data_type.type() != TokenType::KW_DATA_TYPE) {
     return result.failure(SyntaxError(
       data_type.pstart(), data_type.pend(),
-      "Expected data type"
-    ));
+      "Expected data type"));
   }
 
   advance_(tokens, index);
@@ -121,8 +133,7 @@ ParserResult Parser::globalitem_(
   if (name.type() != TokenType::IDENTIFIER) {
     return result.failure(SyntaxError(
       name.pstart(), name.pend(),
-      "Expected identifier"
-    ));
+      "Expected identifier"));
   }
 
   advance_(tokens, index);
@@ -134,8 +145,7 @@ ParserResult Parser::globalitem_(
     if (tokens->at(*index).type() != TokenType::LEFT_BRACE) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected '{'"
-      ));
+        "Expected '{'"));
     }
 
     advance_(tokens, index);
@@ -146,8 +156,7 @@ ParserResult Parser::globalitem_(
     if (tokens->at(*index).type() != TokenType::RIGHT_BRACE) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected '}'"
-      ));
+        "Expected '}'"));
     }
 
     advance_(tokens, index);
@@ -160,8 +169,7 @@ ParserResult Parser::globalitem_(
     if (data_type.type() == TokenType::KW_VOID) {
       return result.failure(SyntaxError(
         data_type.pstart(), data_type.pend(),
-        "Cannot define global variable as void"
-      ));
+        "Cannot define global variable as void"));
     }
 
     advance_(tokens, index);
@@ -172,8 +180,7 @@ ParserResult Parser::globalitem_(
     if (tokens->at(*index).type() != TokenType::SEMICOLON) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected ';'"
-      ));
+        "Expected ';'"));
     }
 
     advance_(tokens, index);
@@ -184,8 +191,7 @@ ParserResult Parser::globalitem_(
   } else {
     return result.failure(SyntaxError(
       tokens->at(*index).pstart(), tokens->at(*index).pend(),
-      "Expected '(' or '=' after identifier"
-    ));
+      "Expected '(' or '=' after identifier"));
   }
 }
 
@@ -197,8 +203,7 @@ ParserResult Parser::arglist_(
   if (tokens->at(*index).type() != TokenType::LEFT_PARENTHESIS) {
     return result.failure(SyntaxError(
       tokens->at(*index).pstart(), tokens->at(*index).pend(),
-      "Expected '('"
-    ));
+      "Expected '('"));
   }
 
   advance_(tokens, index);
@@ -216,8 +221,7 @@ ParserResult Parser::arglist_(
   if (tokens->at(*index).type() != TokenType::KW_DATA_TYPE) {
     return result.failure(SyntaxError(
       tokens->at(*index).pstart(), tokens->at(*index).pend(),
-      "Expected parameter type"
-    ));
+      "Expected parameter type"));
   }
 
   types.push_back(tokens->at(*index));
@@ -236,8 +240,7 @@ ParserResult Parser::arglist_(
     if (tokens->at(*index).type() != TokenType::COMMA) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected ','"
-      ));
+        "Expected ','"));
     }
 
     advance_(tokens, index);
@@ -245,8 +248,7 @@ ParserResult Parser::arglist_(
     if (tokens->at(*index).type() != TokenType::KW_DATA_TYPE) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected parameter type"
-      ));
+        "Expected parameter type"));
     }
 
     types.push_back(tokens->at(*index));
@@ -313,8 +315,7 @@ ParserResult Parser::statement_(
     if (tokens->at(*index).type() != TokenType::IDENTIFIER) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected identifier"
-      ));
+        "Expected identifier"));
     }
 
     const Token& name = tokens->at(*index);
@@ -333,8 +334,7 @@ ParserResult Parser::statement_(
     if (tokens->at(*index).type() != TokenType::EQUALS) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected '='"
-      ));
+        "Expected '='"));
     }
 
     const Token& op = tokens->at(*index);
@@ -347,8 +347,7 @@ ParserResult Parser::statement_(
     if (tokens->at(*index).type() != TokenType::SEMICOLON) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected ';'"
-      ));
+        "Expected ';'"));
     }
 
     advance_(tokens, index);
@@ -360,8 +359,7 @@ ParserResult Parser::statement_(
   if (is_const.type() != TokenType::NULL_TOKEN) {
     return result.failure(SyntaxError(
       is_const.pstart(), is_const.pend(),
-      "Unexpeced keyword 'const'"
-    ));
+      "Unexpeced keyword 'const'"));
   }
 
   if (tokens->at(*index).type() == TokenType::KW_RETURN) {
@@ -374,8 +372,7 @@ ParserResult Parser::statement_(
       if (tokens->at(*index).type() != TokenType::SEMICOLON) {
         return result.failure(SyntaxError(
           tokens->at(*index).pstart(), tokens->at(*index).pend(),
-          "Expected ';'"
-        ));
+          "Expected ';'"));
       }
 
       advance_(tokens, index);
@@ -411,8 +408,7 @@ ParserResult Parser::statement_(
     advance_(tokens, index);
     return result.failure(SyntaxError(
       tokens->at((*index)-1).pstart(), tokens->at((*index)-1).pend(),
-      "Expected ';'"
-    ));
+      "Expected ';'"));
   }
 
   advance_(tokens, index);
@@ -428,8 +424,7 @@ ParserResult Parser::conditional_(
   if (tokens->at(*index).type() != TokenType::KW_IF) {
     return result.failure(SyntaxError(
       tokens->at(*index).pstart(), tokens->at(*index).pend(),
-      "Expected 'if'"
-    ));
+      "Expected 'if'"));
   }
 
   advance_(tokens, index);
@@ -437,8 +432,7 @@ ParserResult Parser::conditional_(
   if (tokens->at(*index).type() != TokenType::LEFT_PARENTHESIS) {
     return result.failure(SyntaxError(
       tokens->at(*index).pstart(), tokens->at(*index).pend(),
-      "Expected '(' after 'if' token"
-    ));
+      "Expected '(' after 'if' token"));
   }
 
   advance_(tokens, index);
@@ -449,8 +443,7 @@ ParserResult Parser::conditional_(
   if (tokens->at(*index).type() != TokenType::RIGHT_PARENTHESIS) {
     return result.failure(SyntaxError(
       tokens->at(*index).pstart(), tokens->at(*index).pend(),
-      "Expected ')' after conditional expression"
-    ));
+      "Expected ')' after conditional expression"));
   }
 
   advance_(tokens, index);
@@ -464,8 +457,7 @@ ParserResult Parser::conditional_(
     if (tokens->at(*index).type() != TokenType::RIGHT_BRACE) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected '}' after code body"
-      ));
+        "Expected '}' after code body"));
     }
 
     advance_(tokens, index);
@@ -482,8 +474,7 @@ ParserResult Parser::conditional_(
         if (tokens->at(*index).type() != TokenType::RIGHT_BRACE) {
           return result.failure(SyntaxError(
             tokens->at(*index).pstart(), tokens->at(*index).pend(),
-            "Expected '}' after code body"
-          ));
+            "Expected '}' after code body"));
         }
 
         advance_(tokens, index);
@@ -518,8 +509,7 @@ ParserResult Parser::conditional_(
         if (tokens->at(*index).type() != TokenType::RIGHT_BRACE) {
           return result.failure(SyntaxError(
             tokens->at(*index).pstart(), tokens->at(*index).pend(),
-            "Expected '}' after code body"
-          ));
+            "Expected '}' after code body"));
         }
 
         advance_(tokens, index);
@@ -552,8 +542,7 @@ ParserResult Parser::loop_(
     if (tokens->at(*index).type() != TokenType::LEFT_PARENTHESIS) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected '(' after 'for' keyword"
-      ));
+        "Expected '(' after 'for' keyword"));
     }
 
     advance_(tokens, index);
@@ -567,8 +556,7 @@ ParserResult Parser::loop_(
     if (tokens->at(*index).type() != TokenType::SEMICOLON) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected ';' after expression"
-      ));
+        "Expected ';' after expression"));
     }
 
     advance_(tokens, index);
@@ -579,8 +567,7 @@ ParserResult Parser::loop_(
     if (tokens->at(*index).type() != TokenType::RIGHT_PARENTHESIS) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected ')' after expression"
-      ));
+        "Expected ')' after expression"));
     }
 
     advance_(tokens, index);
@@ -594,8 +581,7 @@ ParserResult Parser::loop_(
       if (tokens->at(*index).type() != TokenType::RIGHT_BRACE) {
         return result.failure(SyntaxError(
           tokens->at(*index).pstart(), tokens->at(*index).pend(),
-          "Expected '}' after body"
-        ));
+          "Expected '}' after body"));
       }
 
       advance_(tokens, index);
@@ -615,8 +601,7 @@ ParserResult Parser::loop_(
     if (tokens->at(*index).type() != TokenType::LEFT_PARENTHESIS) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected '(' after 'while' keyword"
-      ));
+        "Expected '(' after 'while' keyword"));
     }
 
     advance_(tokens, index);
@@ -627,8 +612,7 @@ ParserResult Parser::loop_(
     if (tokens->at(*index).type() != TokenType::RIGHT_PARENTHESIS) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected ')' after expression"
-      ));
+        "Expected ')' after expression"));
     }
 
     advance_(tokens, index);
@@ -642,8 +626,7 @@ ParserResult Parser::loop_(
       if (tokens->at(*index).type() != TokenType::RIGHT_BRACE) {
         return result.failure(SyntaxError(
           tokens->at(*index).pstart(), tokens->at(*index).pend(),
-          "Expected '}' after body"
-        ));
+          "Expected '}' after body"));
       }
 
       advance_(tokens, index);
@@ -663,8 +646,7 @@ ParserResult Parser::loop_(
     if (tokens->at(*index).type() != TokenType::LEFT_BRACE) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected '{' after 'do' keyword"
-      ));
+        "Expected '{' after 'do' keyword"));
     }
 
     advance_(tokens, index);
@@ -675,8 +657,7 @@ ParserResult Parser::loop_(
     if (tokens->at(*index).type() != TokenType::RIGHT_BRACE) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected '}' after body"
-      ));
+        "Expected '}' after body"));
     }
 
     advance_(tokens, index);
@@ -684,8 +665,7 @@ ParserResult Parser::loop_(
     if (tokens->at(*index).type() != TokenType::KW_WHILE) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected 'while' after '}'"
-      ));
+        "Expected 'while' after '}'"));
     }
 
     advance_(tokens, index);
@@ -693,8 +673,7 @@ ParserResult Parser::loop_(
     if (tokens->at(*index).type() != TokenType::LEFT_PARENTHESIS) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected '(' after 'while' keyword"
-      ));
+        "Expected '(' after 'while' keyword"));
     }
 
     advance_(tokens, index);
@@ -705,8 +684,7 @@ ParserResult Parser::loop_(
     if (tokens->at(*index).type() != TokenType::RIGHT_PARENTHESIS) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected ')' after expression"
-      ));
+        "Expected ')' after expression"));
     }
 
     advance_(tokens, index);
@@ -714,8 +692,7 @@ ParserResult Parser::loop_(
     if (tokens->at(*index).type() != TokenType::SEMICOLON) {
       return result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected ';' after while atom"
-      ));
+        "Expected ';' after while atom"));
     }
 
     advance_(tokens, index);
@@ -725,8 +702,7 @@ ParserResult Parser::loop_(
   } else {
     return result.failure(SyntaxError(
       tokens->at(*index).pstart(), tokens->at(*index).pend(),
-      "Expected 'for', 'while', or 'do' keyword"
-    ));
+      "Expected 'for', 'while', or 'do' keyword"));
   }
 }
 
@@ -887,8 +863,7 @@ ParserResult Parser::factor_(
     } else {
       result.failure(SyntaxError(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
-        "Expected ')'"
-      ));
+        "Expected ')'"));
     }
   }
 
@@ -960,8 +935,7 @@ ParserResult Parser::factor_(
         if (tokens->at(*index).type() != TokenType::RIGHT_PARENTHESIS) {
           return result.failure(SyntaxError(
             tokens->at(*index).pstart(), tokens->at(*index).pend(),
-            "Expected ')' before token"
-          ));
+            "Expected ')' before token"));
         }
 
         advance_(tokens, index);
@@ -991,8 +965,7 @@ ParserResult Parser::factor_(
   } else {
     return result.failure(SyntaxError(
       tokens->at(*index).pstart(), tokens->at(*index).pend(),
-      "Expected an integer or float"
-    ));
+      "Expected an integer or float"));
   }
 }
 

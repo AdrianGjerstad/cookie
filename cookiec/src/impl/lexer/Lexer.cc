@@ -142,12 +142,12 @@ LexerResult Lexer::lex(const std::string& filename) const {
 
       if (pos.character() == '&') {
         pos.advance();
-        result.tokens.push_back(Token(pstart, pos, TokenType::DOUBLE_AMPERSAND)
-            );
+        result.tokens.push_back(Token(pstart, pos,
+            TokenType::DOUBLE_AMPERSAND));
       } else if (pos.character() == '=') {
         pos.advance();
-        result.tokens.push_back(Token(pstart, pos, TokenType::AMPERSAND_EQUALS)
-            );
+        result.tokens.push_back(Token(pstart, pos,
+            TokenType::AMPERSAND_EQUALS));
       } else {
         result.tokens.push_back(Token(pstart, pos, TokenType::AMPERSAND));
       }
@@ -234,8 +234,7 @@ LexerResult Lexer::lex(const std::string& filename) const {
       pos.advance();
 
       result.errors.push_back(IllegalCharacterError(
-        pstart, pos, std::string("unlexable character: '") + ch + "'"
-      ));
+        pstart, pos, std::string("unlexable character: '") + ch + "'"));
     }
   }
 
@@ -246,7 +245,8 @@ LexerResult Lexer::lex(const std::string& filename) const {
     result.errors.push_back(CommentError(
       pstart, pos,
       std::string("still waiting for ") + std::to_string(block_comment) +
-      " level" + (block_comment==1?"":"s") + " of block comments to close"));
+      " level" + (block_comment == 1 ? "" : "s") +
+          " of block comments to close"));
   }
 
   result.tokens.push_back(Token(pos, pos, TokenType::END_OF_FILE));
