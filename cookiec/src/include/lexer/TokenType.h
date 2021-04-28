@@ -82,7 +82,17 @@ class TokenType {
   static const TokenType IDENTIFIER;    // Any variable name ever.
 
   // ASSIGNMENT TOKENS
-  static const TokenType EQUALS;  // =
+  static const TokenType EQUALS;                 // =
+  static const TokenType PLUS_EQUALS;            // +=
+  static const TokenType MINUS_EQUALS;           // -=
+  static const TokenType STAR_EQUALS;            // *=
+  static const TokenType SLASH_EQUALS;           // /=
+  static const TokenType PERCENT_EQUALS;         // %=
+  static const TokenType AMPERSAND_EQUALS;       // &=
+  static const TokenType PIPE_EQUALS;            // |=
+  static const TokenType CARET_EQUALS;           // ^=
+  static const TokenType DOUBLE_LESS_EQUALS;     // <<=
+  static const TokenType DOUBLE_GREATER_EQUALS;  // >>=
 
   // SEPARATOR TOKENS
   static const TokenType SEMICOLON;  // ;

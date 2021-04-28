@@ -77,7 +77,17 @@ const TokenType TokenType::KW_WHILE = TokenType("kw:while");
 const TokenType TokenType::KW_DO = TokenType("kw:do");
 const TokenType TokenType::IDENTIFIER = TokenType("ident");
 
-const TokenType TokenType::EQUALS = TokenType("equals");  // =
+const TokenType TokenType::EQUALS = TokenType("equals");                  // =
+const TokenType TokenType::PLUS_EQUALS = TokenType("pluseq");             // +=
+const TokenType TokenType::MINUS_EQUALS = TokenType("minuseq");           // -=
+const TokenType TokenType::STAR_EQUALS = TokenType("stareq");             // *=
+const TokenType TokenType::SLASH_EQUALS = TokenType("slasheq");           // /=
+const TokenType TokenType::PERCENT_EQUALS = TokenType("pereq");           // %=
+const TokenType TokenType::AMPERSAND_EQUALS = TokenType("ampeq");         // &=
+const TokenType TokenType::PIPE_EQUALS = TokenType("pipeq");              // |=
+const TokenType TokenType::CARET_EQUALS = TokenType("careteq");           // ^=
+const TokenType TokenType::DOUBLE_LESS_EQUALS = TokenType("dublseq");     // <<=
+const TokenType TokenType::DOUBLE_GREATER_EQUALS = TokenType("dubgreq");  // >>=
 
 const TokenType TokenType::SEMICOLON = TokenType("semicolon");  // ;
 const TokenType TokenType::COMMA = TokenType("comma");          // ,

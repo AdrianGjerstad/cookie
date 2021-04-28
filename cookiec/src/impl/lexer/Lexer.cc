@@ -86,15 +86,33 @@ LexerResult Lexer::lex(const std::string& filename) const {
     } else if (ch == '+') {
       Position pstart(pos);
       pos.advance();
-      result.tokens.push_back(Token(pstart, pos, TokenType::PLUS));
+
+      if (pos.character() == '=') {
+        pos.advance();
+        result.tokens.push_back(Token(pstart, pos, TokenType::PLUS_EQUALS));
+      } else {
+        result.tokens.push_back(Token(pstart, pos, TokenType::PLUS));
+      }
     } else if (ch == '-') {
       Position pstart(pos);
       pos.advance();
-      result.tokens.push_back(Token(pstart, pos, TokenType::MINUS));
+
+      if (pos.character() == '=') {
+        pos.advance();
+        result.tokens.push_back(Token(pstart, pos, TokenType::MINUS_EQUALS));
+      } else {
+        result.tokens.push_back(Token(pstart, pos, TokenType::MINUS));
+      }
     } else if (ch == '*') {
       Position pstart(pos);
       pos.advance();
-      result.tokens.push_back(Token(pstart, pos, TokenType::STAR));
+
+      if (pos.character() == '=') {
+        pos.advance();
+        result.tokens.push_back(Token(pstart, pos, TokenType::STAR_EQUALS));
+      } else {
+        result.tokens.push_back(Token(pstart, pos, TokenType::STAR));
+      }
     } else if (ch == '/') {
       Position pstart(pos);
       pos.advance();
@@ -102,13 +120,22 @@ LexerResult Lexer::lex(const std::string& filename) const {
         single_line_comment = true;
         pos.advance();
         continue;
+      } else if (pos.character() == '=') {
+        pos.advance();
+        result.tokens.push_back(Token(pstart, pos, TokenType::SLASH_EQUALS));
+      } else {
+        result.tokens.push_back(Token(pstart, pos, TokenType::SLASH));
       }
-
-      result.tokens.push_back(Token(pstart, pos, TokenType::SLASH));
     } else if (ch == '%') {
       Position pstart(pos);
       pos.advance();
-      result.tokens.push_back(Token(pstart, pos, TokenType::PERCENT));
+
+      if (pos.character() == '=') {
+        pos.advance();
+        result.tokens.push_back(Token(pstart, pos, TokenType::PERCENT_EQUALS));
+      } else {
+        result.tokens.push_back(Token(pstart, pos, TokenType::PERCENT));
+      }
     } else if (ch == '&') {
       Position pstart(pos);
       pos.advance();
@@ -116,6 +143,10 @@ LexerResult Lexer::lex(const std::string& filename) const {
       if (pos.character() == '&') {
         pos.advance();
         result.tokens.push_back(Token(pstart, pos, TokenType::DOUBLE_AMPERSAND)
+            );
+      } else if (pos.character() == '=') {
+        pos.advance();
+        result.tokens.push_back(Token(pstart, pos, TokenType::AMPERSAND_EQUALS)
             );
       } else {
         result.tokens.push_back(Token(pstart, pos, TokenType::AMPERSAND));
@@ -127,6 +158,9 @@ LexerResult Lexer::lex(const std::string& filename) const {
       if (pos.character() == '|') {
         pos.advance();
         result.tokens.push_back(Token(pstart, pos, TokenType::DOUBLE_PIPE));
+      } else if (pos.character() == '=') {
+        pos.advance();
+        result.tokens.push_back(Token(pstart, pos, TokenType::PIPE_EQUALS));
       } else {
         result.tokens.push_back(Token(pstart, pos, TokenType::PIPE));
       }
@@ -137,6 +171,9 @@ LexerResult Lexer::lex(const std::string& filename) const {
       if (pos.character() == '^') {
         pos.advance();
         result.tokens.push_back(Token(pstart, pos, TokenType::DOUBLE_CARET));
+      } else if (pos.character() == '=') {
+        pos.advance();
+        result.tokens.push_back(Token(pstart, pos, TokenType::CARET_EQUALS));
       } else {
         result.tokens.push_back(Token(pstart, pos, TokenType::CARET));
       }
@@ -354,7 +391,13 @@ Token Lexer::make_lt_(Position* pos) const {
 
   if (pos->character() == '<') {
     pos->advance();
-    return Token(pstart, *pos, TokenType::DOUBLE_LESS);
+
+    if (pos->character() == '=') {
+      pos->advance();
+      return Token(pstart, *pos, TokenType::DOUBLE_LESS_EQUALS);
+    } else {
+      return Token(pstart, *pos, TokenType::DOUBLE_LESS);
+    }
   } else if (pos->character() == '=') {
     pos->advance();
     return Token(pstart, *pos, TokenType::LESS_EQUALS);
@@ -369,7 +412,13 @@ Token Lexer::make_gt_(Position* pos) const {
 
   if (pos->character() == '>') {
     pos->advance();
-    return Token(pstart, *pos, TokenType::DOUBLE_GREATER);
+
+    if (pos->character() == '=') {
+      pos->advance();
+      return Token(pstart, *pos, TokenType::DOUBLE_GREATER_EQUALS);
+    } else {
+      return Token(pstart, *pos, TokenType::DOUBLE_GREATER);
+    }
   } else if (pos->character() == '=') {
     pos->advance();
     return Token(pstart, *pos, TokenType::GREATER_EQUALS);

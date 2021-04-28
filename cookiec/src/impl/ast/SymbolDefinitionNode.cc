@@ -8,10 +8,11 @@
 namespace cookie {
 
 SymbolDefinitionNode::SymbolDefinitionNode(
-    const Token& is_const, const Token& type, const Token& name,
-    std::shared_ptr<Node> expr) :
-    is_const_(is_const), type_(type), name_(name), expr_(expr) {
-  // Nothing to do
+    const Token& is_const, const Token& type__, const Token& name,
+    const Token& operation, std::shared_ptr<Node> expr) :
+    is_const_(is_const), type_(type__), name_(name), operation_(operation),
+    expr_(expr) {
+  type(Node::SYMBOL_DEFINITION);
 }
 
 std::string SymbolDefinitionNode::to_string(int depth, bool use_color) const {
@@ -35,6 +36,11 @@ std::string SymbolDefinitionNode::to_string(int depth, bool use_color) const {
   res += ",";
   if (use_color) res += "\x1b[34m";
   res += type_.to_string();
+  if (use_color) res += "\x1b[0m";
+  res += ",\n";
+  res += string_depth_pre_(depth + 2);
+  if (use_color) res += "\x1b[34m";
+  res += operation_.to_string();
   if (use_color) res += "\x1b[0m";
   res += ",\n";
 

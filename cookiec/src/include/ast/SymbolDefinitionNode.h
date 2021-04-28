@@ -11,7 +11,7 @@ namespace cookie {
 
 class SymbolDefinitionNode: public Node {
  public:
-  SymbolDefinitionNode(const Token&, const Token&, const Token&,
+  SymbolDefinitionNode(const Token&, const Token&, const Token&, const Token&,
       std::shared_ptr<Node>);
 
   virtual std::string to_string(int, bool) const;
@@ -20,6 +20,7 @@ class SymbolDefinitionNode: public Node {
   const Token is_const_;
   const Token type_;
   const Token name_;
+  const Token operation_;
   std::shared_ptr<Node> expr_;
 };
 

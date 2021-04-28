@@ -323,7 +323,10 @@ ParserResult Parser::statement_(
     if (tokens->at(*index).type() == TokenType::SEMICOLON) {
       advance_(tokens, index);
       return result.success(std::shared_ptr<Node>(
-          new SymbolDefinitionNode(is_const, type, name, std::shared_ptr<Node>(
+          new SymbolDefinitionNode(is_const, type, name, Token(
+              tokens->at(*index).pstart(), tokens->at(*index).pend(),
+              TokenType::NULL_TOKEN),
+              std::shared_ptr<Node>(
               new NoOperationNode()))));
     }
 
@@ -333,6 +336,8 @@ ParserResult Parser::statement_(
         "Expected '='"
       ));
     }
+
+    const Token& op = tokens->at(*index);
 
     advance_(tokens, index);
 
@@ -349,7 +354,7 @@ ParserResult Parser::statement_(
     advance_(tokens, index);
 
     return result.success(std::shared_ptr<Node>(
-        new SymbolDefinitionNode(is_const, type, name, expr)));
+        new SymbolDefinitionNode(is_const, type, name, op, expr)));
   }
 
   if (is_const.type() != TokenType::NULL_TOKEN) {
@@ -887,10 +892,22 @@ ParserResult Parser::factor_(
     }
   }
 
-  if (tokens->at(*index).type() == TokenType::IDENTIFIER &&
-      tokens->at((*index) + 1).type() == TokenType::EQUALS) {
+  const TokenType next_type = tokens->at((*index) + 1).type();
+  if (tokens->at(*index).type() == TokenType::IDENTIFIER && (
+      next_type == TokenType::EQUALS ||
+      next_type == TokenType::PLUS_EQUALS ||
+      next_type == TokenType::MINUS_EQUALS ||
+      next_type == TokenType::STAR_EQUALS ||
+      next_type == TokenType::SLASH_EQUALS ||
+      next_type == TokenType::PERCENT_EQUALS ||
+      next_type == TokenType::AMPERSAND_EQUALS ||
+      next_type == TokenType::PIPE_EQUALS ||
+      next_type == TokenType::CARET_EQUALS ||
+      next_type == TokenType::DOUBLE_LESS_EQUALS ||
+      next_type == TokenType::DOUBLE_GREATER_EQUALS)) {
     const Token& name = tokens->at(*index);
     advance_(tokens, index);
+    const Token& op = tokens->at(*index);
     advance_(tokens, index);
 
     std::shared_ptr<Node> expr = result.use(expression_(tokens, index));
@@ -900,7 +917,7 @@ ParserResult Parser::factor_(
         tokens->at(*index).pstart(), tokens->at(*index).pend(),
         TokenType::NULL_TOKEN);
     return result.success(std::shared_ptr<Node>(
-        new SymbolDefinitionNode(nultok, nultok, name, expr)));
+        new SymbolDefinitionNode(nultok, nultok, name, op, expr)));
   }
 
   // Not a grouped expression, just check for literals
