@@ -16,6 +16,7 @@
 
 #include <iostream>
 #include <vector>
+#include <cstdlib>
 
 // UTILITIES
 #include "include/util/SourceCodePool.h"
@@ -30,6 +31,13 @@
 #include "include/lexer/Token.h"
 #include "include/lexer/Lexer.h"
 #include "include/structs/LexerResult.h"
+
+// STAGE THREE: PARSER
+#include "include/parser/Parser.h"
+#include "include/structs/ParserResult.h"
+#include "include/ast/Node.h"
+
+#include "include/ast/AbstractSyntaxTree.h"
 
 int main(int argc, char** argv) {
   std::string VERBOSE_1 = "verbose[1]: ";
@@ -109,12 +117,16 @@ int main(int argc, char** argv) {
       std::string line = VERBOSE_2 + "  ";
 
       for (unsigned int i = 0; i < lexer_out.tokens.size(); ++i) {
-        if (line.size() + lexer_out.tokens[i].to_string().size() + 2 >= 80) {
+        if ((line.size() + lexer_out.tokens[i].to_string().size() + 2) -
+            (USE_COLOR * 9) >= 80) {
           std::cerr << line << std::endl;
           line = VERBOSE_2 + "  ";
         }
 
-        line += lexer_out.tokens[i].to_string() + ", ";
+        if (USE_COLOR) line += "\x1b[34m";
+        line += lexer_out.tokens[i].to_string();
+        if (USE_COLOR) line += "\x1b[0m";
+        line += ", ";
       }
 
       if (line.size() > (VERBOSE_2).size() + 2) {
@@ -122,6 +134,47 @@ int main(int argc, char** argv) {
       }
 
       std::cerr << VERBOSE_2 << "}" << std::endl;
+    }
+  }
+
+  cookie::Parser parser;
+  cookie::ParserResult parser_out = parser.parse(&lexer_out.tokens);
+
+  if (parser_out.errors.size()) {
+    for (unsigned int i = 0; i < parser_out.errors.size(); ++i) {
+      std::cerr << parser_out.errors[i].to_string(USE_COLOR) << std::endl;
+    }
+
+    return 1;
+  }
+
+  if (args.verbosity_level >= 1) {
+    std::shared_ptr<cookie::AbstractSyntaxTree> tree =
+        std::dynamic_pointer_cast<cookie::AbstractSyntaxTree>(parser_out.tree);
+
+    std::cerr << VERBOSE_1 << "Parsing complete!" << std::endl;
+    std::cerr << VERBOSE_1 << "Parsed " << tree->functions().size() <<
+        " functions." << std::endl;
+    std::cerr << VERBOSE_1 << "Parsed " << tree->globals().size() <<
+        " globals." << std::endl;
+
+    if (args.verbosity_level >= 2) {
+      if (USE_COLOR) {
+        std::cerr << VERBOSE_2 << "\x1b[33mABSTRACT SYNTAX TREE\x1b[0m:" <<
+            std::endl;
+      } else {
+        std::cerr << VERBOSE_2 << "ABSTRACT SYNTAX TREE:" << std::endl;
+      }
+
+      std::string tree = VERBOSE_2 + parser_out.tree->to_string(0, USE_COLOR);
+
+      for (unsigned int i = 0; i < tree.size(); ++i) {
+        if (tree[i] == '\n') {
+          tree.insert(i + 1, VERBOSE_2);
+        }
+      }
+
+      std::cerr << tree << std::endl;
     }
   }
 

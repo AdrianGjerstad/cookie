@@ -12,37 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
-#define COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
+#include "../../include/ast/NoOperationNode.h"
 
 #include <string>
 
-#include "Token.h"
-#include "TokenType.h"
-#include "../util/Position.h"
-#include "../util/SourceCodePool.h"
-#include "../structs/LexerResult.h"
+#include "../../include/lexer/Token.h"
 
 namespace cookie {
 
-class Lexer {
- public:
-  explicit Lexer(const SourceCodePool*);
+NoOperationNode::NoOperationNode() {
+  // Nothing to do
+}
 
-  LexerResult lex(const std::string&) const;
+std::string NoOperationNode::to_string(int depth, bool use_color) const {
+  std::string res = string_depth_pre_(depth);
 
- private:
-  const SourceCodePool* pool_;
+  if (use_color) res += "\x1b[35m";
+  res += "NoOperationNode()";
+  if (use_color) res += "\x1b[0m";
 
-  Token make_number_(Position*) const;
-  Token make_identifier_(Position*) const;
-
-  Token make_lt_(Position*) const;
-  Token make_gt_(Position*) const;
-  Token make_equals_(Position*) const;
-};
+  return res;
+}
 
 }  // namespace cookie
-
-#endif  // COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
 

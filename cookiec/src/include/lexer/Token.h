@@ -38,6 +38,9 @@ class Token {
   const float as_f32() const;
   const double as_f64() const;
 
+  const Position& pstart() const;
+  const Position& pend() const;
+
  private:
   // The value for the token may be extracted via the source data of these
   // Position fields.

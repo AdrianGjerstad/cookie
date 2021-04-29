@@ -12,37 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
-#define COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
+#ifndef COOKIEC_SRC_INCLUDE_AST_FUNCTIONNODE_H_
+#define COOKIEC_SRC_INCLUDE_AST_FUNCTIONNODE_H_
 
 #include <string>
+#include <memory>
 
-#include "Token.h"
-#include "TokenType.h"
-#include "../util/Position.h"
-#include "../util/SourceCodePool.h"
-#include "../structs/LexerResult.h"
+#include "Node.h"
+#include "../lexer/Token.h"
 
 namespace cookie {
 
-class Lexer {
+class FunctionNode: public Node {
  public:
-  explicit Lexer(const SourceCodePool*);
+  FunctionNode(const Token&, const Token&, const Token&, const Token&,
+      std::shared_ptr<Node>, std::shared_ptr<Node>);
 
-  LexerResult lex(const std::string&) const;
+  virtual std::string to_string(int, bool) const;
 
  private:
-  const SourceCodePool* pool_;
-
-  Token make_number_(Position*) const;
-  Token make_identifier_(Position*) const;
-
-  Token make_lt_(Position*) const;
-  Token make_gt_(Position*) const;
-  Token make_equals_(Position*) const;
+  const Token export_token_;
+  const Token const_return_;
+  const Token return_type_;
+  const Token name_;
+  std::shared_ptr<Node> arglist_;
+  std::shared_ptr<Node> body_;
 };
 
 }  // namespace cookie
 
-#endif  // COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
+#endif  // COOKIEC_SRC_INCLUDE_AST_FUNCTIONNODE_H_
 

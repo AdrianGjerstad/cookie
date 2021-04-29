@@ -12,37 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
-#define COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
+#ifndef COOKIEC_SRC_INCLUDE_STRUCTS_PARSERRESULT_H_
+#define COOKIEC_SRC_INCLUDE_STRUCTS_PARSERRESULT_H_
 
-#include <string>
+#include <vector>
+#include <memory>
 
-#include "Token.h"
-#include "TokenType.h"
-#include "../util/Position.h"
-#include "../util/SourceCodePool.h"
-#include "../structs/LexerResult.h"
+#include "../ast/Node.h"
+#include "../errors/Error.h"
 
 namespace cookie {
 
-class Lexer {
- public:
-  explicit Lexer(const SourceCodePool*);
+struct ParserResult {
+  std::vector<Error> errors;
+  std::shared_ptr<Node> tree;
 
-  LexerResult lex(const std::string&) const;
+  std::shared_ptr<Node> use(ParserResult);
 
- private:
-  const SourceCodePool* pool_;
-
-  Token make_number_(Position*) const;
-  Token make_identifier_(Position*) const;
-
-  Token make_lt_(Position*) const;
-  Token make_gt_(Position*) const;
-  Token make_equals_(Position*) const;
+  ParserResult success(std::shared_ptr<Node>);
+  ParserResult failure(Error);
 };
 
 }  // namespace cookie
 
-#endif  // COOKIEC_SRC_INCLUDE_LEXER_LEXER_H_
+#endif  // COOKIEC_SRC_INCLUDE_STRUCTS_PARSERRESULT_H_
 

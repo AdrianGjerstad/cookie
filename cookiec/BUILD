@@ -20,7 +20,10 @@ cc_binary(
     ":SourceCodePool",
     ":Filesystem",
     ":Token",
-    ":Lexer"
+    ":Lexer",
+    ":Parser",
+    ":ParserResult",
+    ":AbstractSyntaxTree"
   ]
 )
 
@@ -122,6 +125,31 @@ cc_library(
   ]
 )
 
+# CommentError is a derived class of Error that represents a special error case
+# when the lexer is still waiting for a block comment to be closed when it hits
+# the end of lexing the file.
+cc_library(
+  name = "CommentError",
+  srcs = [ "src/impl/errors/CommentError.cc" ],
+  hdrs = [ "src/include/errors/CommentError.h" ],
+  deps = [
+    ":Error",
+    ":Position"
+  ]
+)
+
+# SyntaxError is a derived class of Error that represents errors encountered
+# during parsing.
+cc_library(
+  name = "SyntaxError",
+  srcs = [ "src/impl/errors/SyntaxError.cc" ],
+  hdrs = [ "src/include/errors/SyntaxError.h" ],
+  deps = [
+    ":Error",
+    ":Position"
+  ]
+)
+
 ################################################################################
 ################################### WARNINGS ###################################
 ################################################################################
@@ -177,7 +205,250 @@ cc_library(
     ":Position",
     ":SourceCodePool",
     ":LexerResult",
-    ":IllegalCharacterError"
+    ":IllegalCharacterError",
+    ":CommentError"
+  ]
+)
+
+################################################################################
+#################################### PARSER ####################################
+################################################################################
+
+# Node is the base class of all AST nodes.
+cc_library(
+  name = "Node",
+  srcs = [ "src/impl/ast/Node.cc" ],
+  hdrs = [ "src/include/ast/Node.h" ]
+)
+
+# BinaryOperationNode encompasses every operation that takes two operands and
+# produces one result.
+cc_library(
+  name = "BinaryOperationNode",
+  srcs = [ "src/impl/ast/BinaryOperationNode.cc" ],
+  hdrs = [ "src/include/ast/BinaryOperationNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# UnaryOperationNode is the same as BinaryOperationNode, only, there is only one
+# operand to operate on.
+cc_library(
+  name = "UnaryOperationNode",
+  srcs = [ "src/impl/ast/UnaryOperationNode.cc" ],
+  hdrs = [ "src/include/ast/UnaryOperationNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# LiteralNode stores a single token corresponding to some form of literal,
+# wether that is a number, or string.
+cc_library(
+  name = "LiteralNode",
+  srcs = [ "src/impl/ast/LiteralNode.cc" ],
+  hdrs = [ "src/include/ast/LiteralNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# CodeBodyNode stores a list of statements to be put into a signle body of code.
+# This could be a function body, loop body, conditional body, etc.
+cc_library(
+  name = "CodeBodyNode",
+  srcs = [ "src/impl/ast/CodeBodyNode.cc" ],
+  hdrs = [ "src/include/ast/CodeBodyNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# NoOperationNode stores and does absolutely nothing. It represents a statement
+# with nothing in it; a nop.
+cc_library(
+  name = "NoOperationNode",
+  srcs = [ "src/impl/ast/NoOperationNode.cc" ],
+  hdrs = [ "src/include/ast/NoOperationNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# FunctionNode stores a function return type, name, ArgumentListNode, and
+# CodeBodyNode.
+cc_library(
+  name = "FunctionNode",
+  srcs = [ "src/impl/ast/FunctionNode.cc" ],
+  hdrs = [ "src/include/ast/FunctionNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# ArgumentListNode stores a list of data type-argument name pairs for functions.
+# This node DOES NOT represent calling a method, only defining it.
+cc_library(
+  name = "ArgumentListNode",
+  srcs = [ "src/impl/ast/ArgumentListNode.cc" ],
+  hdrs = [ "src/include/ast/ArgumentListNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# ParserResult represents a simple lightweight struct for storing errors and, on
+# success, a node.
+cc_library(
+  name = "ParserResult",
+  srcs = [ "src/impl/structs/ParserResult.cc" ],
+  hdrs = [ "src/include/structs/ParserResult.h" ],
+  deps = [
+    ":Node",
+    ":Error"
+  ]
+)
+
+# AbstractSyntaxTree is a special derived class of Node that stores an index of
+# all functions, global variables, etc. It is intended to be the highest node in
+# the entire AST.
+cc_library(
+  name = "AbstractSyntaxTree",
+  srcs = [ "src/impl/ast/AbstractSyntaxTree.cc" ],
+  hdrs = [ "src/include/ast/AbstractSyntaxTree.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# SymbolReferenceNode is a node type designated for referencing local,
+# parameter, and global variables.
+cc_library(
+  name = "SymbolReferenceNode",
+  srcs = [ "src/impl/ast/SymbolReferenceNode.cc" ],
+  hdrs = [ "src/include/ast/SymbolReferenceNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# SymbolDefinitionNode represents the action of defining or setting the value of
+# a local, parameter, or global variable.
+cc_library(
+  name = "SymbolDefinitionNode",
+  srcs = [ "src/impl/ast/SymbolDefinitionNode.cc" ],
+  hdrs = [ "src/include/ast/SymbolDefinitionNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# ReturnNode represents the literal "return ..." statement.
+cc_library(
+  name = "ReturnNode",
+  srcs = [ "src/impl/ast/ReturnNode.cc" ],
+  hdrs = [ "src/include/ast/ReturnNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# GlobalDefinitionNode represents the definition of a global symbol. Duh.
+cc_library(
+  name = "GlobalDefinitionNode",
+  srcs = [ "src/impl/ast/GlobalDefinitionNode.cc" ],
+  hdrs = [ "src/include/ast/GlobalDefinitionNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# FunctionCallNode represents code that calls a method with a name and
+# arguments.
+cc_library(
+  name = "FunctionCallNode",
+  srcs = [ "src/impl/ast/FunctionCallNode.cc" ],
+  hdrs = [ "src/include/ast/FunctionCallNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# ConditionalNode represents the if, else if, and else statements.
+cc_library(
+  name = "ConditionalNode",
+  srcs = [ "src/impl/ast/ConditionalNode.cc" ],
+  hdrs = [ "src/include/ast/ConditionalNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# ForLoopNode and WhileLoopNode are the nodes responsible for implementing the
+# for, while, and do-while loops of cookie.
+cc_library(
+  name = "ForLoopNode",
+  srcs = [ "src/impl/ast/ForLoopNode.cc" ],
+  hdrs = [ "src/include/ast/ForLoopNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+cc_library(
+  name = "WhileLoopNode",
+  srcs = [ "src/impl/ast/WhileLoopNode.cc" ],
+  hdrs = [ "src/include/ast/WhileLoopNode.h" ],
+  deps = [
+    ":Node",
+    ":Token"
+  ]
+)
+
+# The Parser takes in a list of tokens generated by the lexer. Its job is to
+# create an Abstract Syntax Tree of nodes representing the code that was written
+# in a hierarchical format.
+cc_library(
+  name = "Parser",
+  srcs = [ "src/impl/parser/Parser.cc" ],
+  hdrs = [ "src/include/parser/Parser.h" ],
+  deps = [
+    ":Node",
+    ":Token",
+    ":AbstractSyntaxTree",
+    ":BinaryOperationNode",
+    ":UnaryOperationNode",
+    ":LiteralNode",
+    ":CodeBodyNode",
+    ":NoOperationNode",
+    ":FunctionNode",
+    ":ArgumentListNode",
+    ":SymbolReferenceNode",
+    ":SymbolDefinitionNode",
+    ":ReturnNode",
+    ":GlobalDefinitionNode",
+    ":FunctionCallNode",
+    ":ConditionalNode",
+    ":ForLoopNode",
+    ":WhileLoopNode",
+    ":ParserResult",
+    ":SyntaxError"
   ]
 )
 
